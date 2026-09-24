@@ -11,7 +11,7 @@ Use this skill for modern, production-ready UI work in the Parcelio Vite + React
 
 Build interfaces that feel intentional, clean, modern, and easy to scan.
 
-- Use the existing Geist font, Tailwind CSS v4, shadcn-style components, Base UI primitives, and Lucide icons.
+- Use the existing Urbanist / Geist font, Tailwind CSS v4, shadcn-style components, Base UI primitives, and Lucide icons.
 - Reuse existing components before creating new primitives.
 - Use CSS variables and the existing color system instead of scattering raw colors.
 - Use restrained borders, clear spacing, readable contrast, and consistent visual hierarchy.
@@ -19,6 +19,16 @@ Build interfaces that feel intentional, clean, modern, and easy to scan.
 - Do not create decorative UI that reduces clarity or makes the workflow slower.
 - Do not use excessive gradients, oversized headings, unnecessary glass effects, or crowded cards.
 - Keep card corners, shadows, spacing, and control sizes consistent throughout the page.
+
+## Mandatory Shadcn/UI Usage
+
+Shadcn is installed and configured in this repository (`components.json`).
+**ALWAYS use shadcn/ui components when designing or building any UI. The user should NEVER have to ask for it.**
+
+- **Default to shadcn:** For all buttons, accordions, dialogs, cards, inputs, tabs, dropdowns, sheets, badges, and tooltips, always use shadcn components from `@/components/ui/`.
+- **Add Missing Primitives Proactively:** If a required shadcn primitive (e.g., `accordion.tsx`, `card.tsx`, `badge.tsx`, `dialog.tsx`) is not yet present in `src/components/ui/`, create or add it following the project's `components.json` settings before composing the feature.
+- **No Raw Ad-Hoc Replacements:** Never build raw custom div-based accordions, ad-hoc buttons, or manual modals when a shadcn primitive exists.
+- **Strictly Standard Tailwind Classes:** Always use standard Tailwind CSS utility classes. Never use arbitrary bracketed pixel values (e.g. `w-[340px]`, `max-w-[400px]`, `text-[52px]`, `p-[18px]`).
 
 ## Required UI States
 

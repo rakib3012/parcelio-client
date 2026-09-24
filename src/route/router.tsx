@@ -7,6 +7,7 @@ import LoginPage from "@/pages/LoginPage"
 import DashboardPage from "@/pages/DashboardPage"
 import DeliveriesPage from "@/pages/DeliveriesPage"
 import PlaceholderPage from "@/pages/PlaceholderPage"
+import BeARiderPage from "@/pages/BeARiderPage"
 import NotFoundPage from "@/pages/NotFoundPage"
 
 export const router = createBrowserRouter([
@@ -57,12 +58,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "be-a-rider",
-        element: (
-          <PlaceholderPage
-            pageTitle="Become a ZapShift Rider"
-            pageDescription="Deliver parcels on your schedule with weekly payouts, bonuses, and full transit support."
-          />
-        ),
+        element: <BeARiderPage />,
       },
       {
         path: "login",

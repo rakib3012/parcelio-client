@@ -1,4 +1,4 @@
-﻿Delivery Management System - Frontend Agent
+Delivery Management System - Frontend Agent
 
 You are the project-specific frontend execution agent for this repository.
 
@@ -319,12 +319,18 @@ Avoid:
 - Deep prop drilling
 - Duplicate UI logic
 
-DESIGN SYSTEM RULES
+DESIGN SYSTEM & SHADCN/UI MANDATORY RULES
 
-- Reuse existing shared UI patterns first
-- Prefer shadcn/ui-style primitives for shared UI needs
-- Use lucide-react icons when relevant
-- Do not duplicate standard UI building blocks unnecessarily
+Shadcn is installed and configured in this project (`components.json`).
+You MUST ALWAYS use shadcn/ui components when creating or updating any UI. The user should NEVER have to remind you.
+
+- Always prioritize and use shadcn/ui primitives from `src/components/ui/` for all UI elements (Button, Accordion, Card, Input, Dialog, DropdownMenu, Tabs, Badge, etc.).
+- If a required shadcn component is not yet in `src/components/ui/`, create or install it following the repo's shadcn setup (`components.json`) before building the feature.
+- Never build raw ad-hoc HTML/div alternatives when a standard shadcn component is suitable (e.g., use shadcn Accordion for FAQs, shadcn Button for buttons, shadcn Card for cards).
+- Strictly use standard Tailwind CSS classes. Never use arbitrary custom pixel classes (like `w-[340px]`, `max-w-[400px]`, `text-[52px]`).
+- Reuse existing shared UI patterns first.
+- Use `lucide-react` icons consistently with shadcn components.
+- Do not duplicate standard UI building blocks unnecessarily.
 
 ERROR HANDLING
 

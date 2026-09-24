@@ -1,47 +1,73 @@
-import { Clock, ShieldCheck, Truck } from 'lucide-react'
+interface WorkStep {
+  id: number
+  title: string
+  description: string
+  icon: string
+}
+
+const workSteps: WorkStep[] = [
+  {
+    id: 1,
+    title: "Booking Pick & Drop",
+    description:
+      "From personal packages to business shipments — we deliver on time, every time.",
+    icon: "/assets/bookingIcon.png",
+  },
+  {
+    id: 2,
+    title: "Cash On Delivery",
+    description:
+      "From personal packages to business shipments — we deliver on time, every time.",
+    icon: "/assets/bookingIcon.png",
+  },
+  {
+    id: 3,
+    title: "Delivery Hub",
+    description:
+      "From personal packages to business shipments — we deliver on time, every time.",
+    icon: "/assets/bookingIcon.png",
+  },
+  {
+    id: 4,
+    title: "Booking SME & Corporate",
+    description:
+      "From personal packages to business shipments — we deliver on time, every time.",
+    icon: "/assets/bookingIcon.png",
+  },
+]
 
 const HowItWorks = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-900">
-            <Truck className="w-5 h-5" />
-          </div>
-          <h2 className="text-lg font-bold text-neutral-900">
-            Nationwide Coverage
-          </h2>
-          <p className="text-sm text-neutral-600 leading-relaxed">
-            Delivering across 64 districts with verified hubs and swift pickup
-            points.
-          </p>
-        </div>
+    <section className="space-y-6">
+      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#03332D] tracking-tight">
+        How it Works
+      </h2>
 
-        <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-900">
-            <Clock className="w-5 h-5" />
-          </div>
-          <h2 className="text-lg font-bold text-neutral-900">
-            Guaranteed Speed
-          </h2>
-          <p className="text-sm text-neutral-600 leading-relaxed">
-            Same-day and next-day express delivery services optimized for modern
-            e-commerce.
-          </p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {workSteps.map((step) => (
+          <div
+            key={step.id}
+            className="bg-white rounded-2xl p-6 sm:p-7 border border-neutral-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
+          >
+            <div className="mb-4">
+              <img
+                src={step.icon}
+                alt={step.title}
+                className="w-10 h-10 object-contain"
+              />
+            </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-xs space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-900">
-            <ShieldCheck className="w-5 h-5" />
+            <h3 className="text-base font-bold text-[#03332D] mb-2 leading-snug">
+              {step.title}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+              {step.description}
+            </p>
           </div>
-          <h2 className="text-lg font-bold text-neutral-900">
-            Secure & Insured
-          </h2>
-          <p className="text-sm text-neutral-600 leading-relaxed">
-            Safe parcel handling with OTP confirmation and comprehensive damage
-            protection.
-          </p>
-        </div>
-      </section>
+        ))}
+      </div>
+    </section>
   )
 }
 

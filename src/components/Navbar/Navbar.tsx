@@ -38,10 +38,10 @@ const Navbar = () => {
   }
 
   return (
-    <header className="w-full bg-neutral-100 pt-4 px-4 sm:px-6 lg:px-8">
+    <header className="w-full bg-white border-b border-neutral-200/80 sticky top-0 z-50 shadow-xs">
       <nav
         aria-label="Main Navigation"
-        className="max-w-7xl mx-auto bg-white rounded-2xl md:rounded-full px-5 md:px-7 py-3 shadow-xs border border-neutral-200/70 flex items-center justify-between transition-all"
+        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between transition-all"
       >
         {/* Brand Logo & Name */}
         <Link
@@ -145,7 +145,7 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden max-w-7xl mx-auto mt-2 bg-white rounded-2xl p-5 shadow-md border border-neutral-200/80 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="md:hidden w-full border-t border-neutral-200 bg-white px-4 sm:px-6 py-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150">
           <ul className="flex flex-col gap-3 list-none m-0 p-0 pb-4 border-b border-neutral-100">
             {navigationItems.map((navigationItem) => (
               <li key={navigationItem.destinationPath}>
