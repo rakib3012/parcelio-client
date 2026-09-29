@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import { useRiderApplication } from "@/lib/hooks/api/rider/apply"
 
 interface WarehouseLocation {
   region: string
@@ -22,7 +23,7 @@ interface WarehouseLocation {
 // Zod is a TypeScript-first schema declaration and validation library.
 // It allows us to define the shape and constraints of our form data in one place,
 // and automatically infers static TypeScript types from it.
-export const riderRegistrationSchema = z.object({
+const riderRegistrationSchema = z.object({
   name: z
     .string()
     .trim()
@@ -91,9 +92,14 @@ export type RiderRegistrationFormData = z.infer<typeof riderRegistrationSchema>
 const BeARiderPage = () => {
   const [warehouses, setWarehouses] = useState<WarehouseLocation[]>([])
   const [availableDistricts, setAvailableDistricts] = useState<string[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccessSubmitted, setIsSuccessSubmitted] = useState(false)
   const [submittedData, setSubmittedData] = useState<RiderRegistrationFormData | null>(null)
+
+  const {
+    mutate: submitApplication,
+    isPending,
+    error: apiError,
+  } = useRiderApplication()
 
   // -------------------------------------------------------------------------
   // 2. Initializing React Hook Form with Zod Resolver
@@ -161,16 +167,29 @@ const BeARiderPage = () => {
   }, [selectedRegion, warehouses, setValue])
 
   // Form submission handler called ONLY when all Zod validations pass
-  const onRiderFormSubmit = async (data: RiderRegistrationFormData) => {
-    setIsSubmitting(true)
-
-    // Simulate server processing delay
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-
-    setIsSubmitting(false)
-    setIsSuccessSubmitted(true)
-    setSubmittedData(data)
-    reset()
+  const onRiderFormSubmit = (data: RiderRegistrationFormData) => {
+    // Map frontend form field names to backend API field names
+    submitApplication(
+      {
+        applicantName: data.name,
+        drivingLicenseNumber: data.drivingLicense,
+        emailAddress: data.email,
+        region: data.region,
+        district: data.district,
+        nidNumber: data.nid,
+        phoneNumber: data.phone,
+        bikeBrandModelYear: data.bikeBrandModelYear,
+        bikeRegistrationNumber: data.bikeRegistrationNumber,
+        aboutYourself: data.aboutYourself || "",
+      },
+      {
+        onSuccess: () => {
+          setIsSuccessSubmitted(true)
+          setSubmittedData(data)
+          reset() 
+        },
+      }
+    )
   }
 
   return (
@@ -193,6 +212,14 @@ const BeARiderPage = () => {
             Tell us about yourself
           </h2>
         </div>
+
+        {/* API Error Banner */}
+        {apiError && !isSuccessSubmitted && (
+          <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{apiError.message}</p>
+          </div>
+        )}
 
         {/* Success Banner */}
         {isSuccessSubmitted && submittedData && (
@@ -435,10 +462,10 @@ const BeARiderPage = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                   className="w-full bg-lime-400 hover:bg-lime-500 text-neutral-900 font-semibold py-3 px-6 rounded-lg transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? (
+                  {isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Submitting Application...</span>

@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from "react"
-import { useNavigate, useLocation, Link } from "react-router"
+import { useState, type FormEvent, type ChangeEvent } from "react"
+import { useNavigate, Link } from "react-router"
 import { Loader2 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
-import { useLogin } from "@/lib/hooks/api/auth/login"
+import { useRegister } from "@/lib/hooks/api/auth/register"
 
 const GoogleIcon = () => (
   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -25,65 +25,64 @@ const GoogleIcon = () => (
   </svg>
 )
 
-const LoginPage = () => {
+const SignupPage = () => {
+  const [fullName, setFullName] = useState("")
   const [emailAddress, setEmailAddress] = useState("")
   const [userPassword, setUserPassword] = useState("")
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
-  const location = useLocation()
 
   const {
-    mutate: loginMutate,
+    mutate: registerMutate,
     isPending,
     error: mutationError,
-  } = useLogin()
+  } = useRegister()
 
-  interface LocationStateWithRedirect {
-    redirectedFromLocation?: {
-      pathname: string
+  const handleAvatarSelection = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const previewUrl = URL.createObjectURL(file)
+      setAvatarPreview(previewUrl)
     }
   }
-
-  const locationState = location.state as LocationStateWithRedirect | null
-  const targetDestination =
-    locationState?.redirectedFromLocation?.pathname || "/dashboard"
 
   const handleFormSubmission = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!emailAddress.trim() || !userPassword.trim()) {
+    if (!fullName.trim() || !emailAddress.trim() || !userPassword.trim()) {
       return
     }
 
-    loginMutate(
-      {
-        emailAddress: emailAddress.trim(),
-        password: userPassword.trim(),
+    const registerData = {
+      fullName: fullName.trim(),
+      emailAddress: emailAddress.trim(),
+      password: userPassword.trim(),
+    }
+
+    registerMutate(registerData, {
+      onSuccess: (data) => {
+        // Save token to localStorage
+        localStorage.setItem("accessToken", data.data.token)
+
+        // Update Zustand auth store
+        login(data.data.userProfile)
+
+        // Navigate to dashboard
+        navigate("/dashboard", { replace: true })
       },
-      {
-        onSuccess: (data) => {
-          // Save token to localStorage
-          localStorage.setItem("accessToken", data.data.token)
-
-          // Update Zustand auth store
-          login(data.data.userProfile)
-
-          // Navigate to dashboard or redirect target
-          navigate(targetDestination, { replace: true })
-        },
-      }
-    )
+    })
   }
 
   return (
     <div className="w-full max-w-5xl mx-auto my-2 sm:my-6 bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[620px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[660px]">
         {/* Left Side: Form Content */}
         <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
           <div>
             {/* Logo */}
-            <Link to="/" className="inline-flex items-center gap-2 mb-8 group">
+            <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
               <img
                 src="/assets/logo.png"
                 alt="Parcelio Logo"
@@ -95,36 +94,88 @@ const LoginPage = () => {
             </Link>
 
             {/* Title & Subtitle */}
-            <div className="mb-6">
+            <div className="mb-4">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
-                Welcome Back
+                Create an Account
               </h1>
               <p className="text-xs sm:text-sm text-neutral-500 font-medium mt-1.5">
-                Login with Parcelio
+                Register with Parcelio
               </p>
+            </div>
+
+            {/* Avatar Upload Icon as shown in screenshot */}
+            <div className="mb-4">
+              <label
+                htmlFor="avatarUploadInput"
+                className="inline-block cursor-pointer group"
+                title="Upload Profile Picture"
+              >
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-neutral-100 border border-neutral-200/80 flex items-center justify-center transition-all group-hover:opacity-85 shadow-xs">
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt="Avatar Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src="/assets/image-upload-icon.png"
+                      alt="Upload Profile Picture"
+                      className="w-full h-full object-cover p-0.5"
+                    />
+                  )}
+                </div>
+                <input
+                  id="avatarUploadInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarSelection}
+                  className="hidden"
+                  disabled={isPending}
+                />
+              </label>
             </div>
 
             {/* Error Message */}
             {mutationError && (
               <div
                 role="alert"
-                className="mb-5 p-3 text-xs rounded-xl bg-red-50 border border-red-200 text-red-700"
+                className="mb-4 p-3 text-xs rounded-xl bg-red-50 border border-red-200 text-red-700"
               >
                 {mutationError.message}
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleFormSubmission} className="space-y-4">
+            <form onSubmit={handleFormSubmission} className="space-y-3.5">
               <div>
                 <label
-                  htmlFor="loginEmail"
+                  htmlFor="registerName"
+                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
+                >
+                  Name
+                </label>
+                <input
+                  id="registerName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Name"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
+                  required
+                  disabled={isPending}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="registerEmail"
                   className="block text-xs font-semibold text-neutral-800 mb-1.5"
                 >
                   Email
                 </label>
                 <input
-                  id="loginEmail"
+                  id="registerEmail"
                   type="email"
                   value={emailAddress}
                   onChange={(e) => setEmailAddress(e.target.value)}
@@ -137,30 +188,22 @@ const LoginPage = () => {
 
               <div>
                 <label
-                  htmlFor="loginPassword"
+                  htmlFor="registerPassword"
                   className="block text-xs font-semibold text-neutral-800 mb-1.5"
                 >
                   Password
                 </label>
                 <input
-                  id="loginPassword"
+                  id="registerPassword"
                   type="password"
                   value={userPassword}
                   onChange={(e) => setUserPassword(e.target.value)}
                   placeholder="Password"
                   className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
                   required
+                  minLength={6}
                   disabled={isPending}
                 />
-                <div className="mt-1.5 text-left">
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="text-xs text-neutral-500 hover:text-neutral-900 underline-offset-2 hover:underline transition-colors"
-                  >
-                    Forget Password?
-                  </a>
-                </div>
               </div>
 
               <button
@@ -171,22 +214,22 @@ const LoginPage = () => {
                 {isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin text-neutral-900" />
-                    <span>Logging In...</span>
+                    <span>Registering...</span>
                   </>
                 ) : (
-                  <span>Login</span>
+                  <span>Register</span>
                 )}
               </button>
             </form>
 
-            {/* Don't have account */}
+            {/* Already have account */}
             <div className="text-center mt-3.5 text-xs text-neutral-600">
-              Don't have any account?{" "}
+              Already have an account?{" "}
               <Link
-                to="/signup"
+                to="/login"
                 className="text-[#7ca320] font-semibold hover:underline"
               >
-                Register
+                Login
               </Link>
             </div>
 
@@ -195,13 +238,13 @@ const LoginPage = () => {
               Or
             </div>
 
-            {/* Google Login Button */}
+            {/* Google Register Button */}
             <button
               type="button"
               className="w-full py-2.5 px-4 rounded-lg bg-[#eef2f6] hover:bg-[#e2e8f0] text-neutral-800 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2.5 border border-transparent cursor-pointer"
             >
               <GoogleIcon />
-              <span>Login with google</span>
+              <span>Register with google</span>
             </button>
           </div>
         </div>
@@ -219,4 +262,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default SignupPage

@@ -1,16 +1,14 @@
- 
- 
-import './App.css'
+import { RouterProvider } from "react-router"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { router } from "@/route/router"
+
+const queryClient = new QueryClient()
 
 function App() {
-  
-
   return (
-    <>
-      <section id="center">
-        <h1>thisi is the delivery management system</h1>
-      </section>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   )
 }
 

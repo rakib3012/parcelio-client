@@ -9,6 +9,9 @@ import DeliveriesPage from "@/pages/DeliveriesPage"
 import PlaceholderPage from "@/pages/PlaceholderPage"
 import BeARiderPage from "@/pages/BeARiderPage"
 import NotFoundPage from "@/pages/NotFoundPage"
+import SingupPage from "@/pages/SingupPage"
+
+import AboutPage from "@/pages/AboutPage"
 
 export const router = createBrowserRouter([
   // Public Routes (Wrapped in RootLayout with ZapShift Navbar)
@@ -40,12 +43,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: (
-          <PlaceholderPage
-            pageTitle="About ZapShift"
-            pageDescription="Learn how we are modernizing parcel delivery with real-time tracking and verified riders."
-          />
-        ),
+        element: <AboutPage />,
       },
       {
         path: "pricing",
@@ -63,6 +61,10 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "signup",
+        element: <SingupPage />,
       },
       {
         path: "*",
