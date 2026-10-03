@@ -1,12 +1,21 @@
-import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useState, useEffect, useMemo } from "react"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 import { useRiderApplication } from "@/lib/hooks/api/rider/apply"
 
 interface WarehouseLocation {
@@ -112,6 +121,7 @@ const BeARiderPage = () => {
     handleSubmit,
     watch,
     setValue,
+    control,
     reset,
     formState: { errors },
   } = useForm<RiderRegistrationFormData>({
@@ -148,6 +158,16 @@ const BeARiderPage = () => {
 
   // Extract unique regions
   const uniqueRegions = Array.from(new Set(warehouses.map((w) => w.region))).filter(Boolean)
+
+  // Items map for Base UI Select value-to-label resolution (as in shadcn base-ui Select)
+  const regionItems = useMemo(
+    () => Object.fromEntries(uniqueRegions.map((r) => [r, r])),
+    [uniqueRegions]
+  )
+  const districtItems = useMemo(
+    () => Object.fromEntries(availableDistricts.map((d) => [d, d])),
+    [availableDistricts]
+  )
 
   // Update available districts when selectedRegion changes
   useEffect(() => {
@@ -315,19 +335,40 @@ const BeARiderPage = () => {
               {/* 4. Your Region */}
               <div className="space-y-1.5">
                 <Label htmlFor="region">Your Region</Label>
-                <Select
-                  id="region"
-                  {...register("region")}
-                  aria-invalid={errors.region ? "true" : "false"}
-                  className={errors.region ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
-                >
-                  <option value="">Select your Region</option>
-                  {uniqueRegions.map((region) => (
-                    <option key={region} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </Select>
+                <Controller
+                  name="region"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      items={regionItems}
+                      value={field.value || null}
+                      onValueChange={(val) => {
+                        field.onChange(val || "")
+                      }}
+                    >
+                      <SelectTrigger
+                        id="region"
+                        className={cn(
+                          "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                          errors.region && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                        )}
+                        aria-invalid={errors.region ? "true" : "false"}
+                      >
+                        <SelectValue placeholder="Select your Region" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Regions</SelectLabel>
+                          {uniqueRegions.map((region) => (
+                            <SelectItem key={region} value={region}>
+                              {region}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {errors.region && (
                   <p className="text-xs text-red-600 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -339,22 +380,43 @@ const BeARiderPage = () => {
               {/* 5. Your District */}
               <div className="space-y-1.5">
                 <Label htmlFor="district">Your District</Label>
-                <Select
-                  id="district"
-                  {...register("district")}
-                  disabled={!selectedRegion || availableDistricts.length === 0}
-                  aria-invalid={errors.district ? "true" : "false"}
-                  className={errors.district ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
-                >
-                  <option value="">
-                    {selectedRegion ? "Select your District" : "Select Region First"}
-                  </option>
-                  {availableDistricts.map((district) => (
-                    <option key={district} value={district}>
-                      {district}
-                    </option>
-                  ))}
-                </Select>
+                <Controller
+                  name="district"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      items={districtItems}
+                      value={field.value || null}
+                      disabled={!selectedRegion || availableDistricts.length === 0}
+                      onValueChange={(val) => field.onChange(val || "")}
+                    >
+                      <SelectTrigger
+                        id="district"
+                        className={cn(
+                          "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                          errors.district && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                        )}
+                        aria-invalid={errors.district ? "true" : "false"}
+                      >
+                        <SelectValue
+                          placeholder={
+                            selectedRegion ? "Select your District" : "Select Region First"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Districts</SelectLabel>
+                          {availableDistricts.map((district) => (
+                            <SelectItem key={district} value={district}>
+                              {district}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {errors.district && (
                   <p className="text-xs text-red-600 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />

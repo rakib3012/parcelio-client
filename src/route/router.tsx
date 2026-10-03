@@ -1,17 +1,18 @@
-import { createBrowserRouter } from "react-router"
-import RootLayout from "@/layouts/RootLayout"
-import DashboardLayout from "@/layouts/DashboardLayout"
-import { ProtectedRoute } from "@/route/ProtectedRoute"
-import HomePage from "@/pages/HomePage"
-import LoginPage from "@/pages/LoginPage"
-import DashboardPage from "@/pages/DashboardPage"
-import DeliveriesPage from "@/pages/DeliveriesPage"
-import PlaceholderPage from "@/pages/PlaceholderPage"
-import BeARiderPage from "@/pages/BeARiderPage"
-import NotFoundPage from "@/pages/NotFoundPage"
-import SingupPage from "@/pages/SingupPage"
+import { createBrowserRouter } from "react-router";
+import RootLayout from "@/layouts/RootLayout";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import { ProtectedRoute } from "@/route/ProtectedRoute";
+import HomePage from "@/pages/HomePage";
+import LoginPage from "@/pages/LoginPage";
+import DashboardPage from "@/pages/DashboardPage";
+import DeliveriesPage from "@/pages/DeliveriesPage";
+import PlaceholderPage from "@/pages/PlaceholderPage";
+import BeARiderPage from "@/pages/BeARiderPage";
+import NotFoundPage from "@/pages/NotFoundPage";
+import SingupPage from "@/pages/SingupPage";
 
-import AboutPage from "@/pages/AboutPage"
+import AboutPage from "@/pages/AboutPage";
+import BookingPage from "@/pages/BookingPage";
 
 export const router = createBrowserRouter([
   // Public Routes (Wrapped in RootLayout with ZapShift Navbar)
@@ -44,6 +45,19 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutPage />,
+      },
+      {
+        path: "booking",
+        element: <BookingPage />,
+      },
+      {
+        path: "tracking",
+        element: (
+          <PlaceholderPage
+            pageTitle="Tracking"
+            pageDescription="Track your delivery with Parcelio"
+          />
+        ),
       },
       {
         path: "pricing",
@@ -93,4 +107,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-])
+]);
