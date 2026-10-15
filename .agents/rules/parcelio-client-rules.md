@@ -78,9 +78,12 @@ Do not place files outside these directories.
 ## 8. API Integration
 
 - All API request logic lives in `src/lib/hooks/api/`.
+- Every hook file **must** use named exports for BOTH the fetch function and the hook (e.g. `export const createUser = ...` and `export const useCreateUser = ...`).
+- **No barrel re-exports**: Do not create or use barrel files (`index.ts` / `users.ts`) to re-export hooks. Components must import directly from the specific hook file.
+- **Self-contained**: Each hook file must define its own types without importing domain types from sibling hook files.
 - Use TanStack Query for fetching and mutations.
 - **Never** call `fetch` or `axios` directly from page or component files.
-- Define request/response types in `src/lib/types/`.
+- Define request/response types in `src/lib/types/` or directly inside the hook file.
 - Handle loading, success, empty, error, and unauthorized states.
 
 ## 9. Routing & Auth

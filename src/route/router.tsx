@@ -1,18 +1,35 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "@/layouts/RootLayout";
-import DashboardLayout from "@/layouts/DashboardLayout";
-import { ProtectedRoute } from "@/route/ProtectedRoute";
+import UserDashboardLayout from "@/layouts/UserDashboardLayout";
+import RiderLayout from "@/layouts/RiderLayout";
+import AdminLayout from "@/layouts/AdminLayout";
+import { UserRoute } from "@/route/UserRoute";
+import { RiderRoute } from "@/route/RiderRoute";
+import { AdminRoute } from "@/route/AdminRoute";
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/LoginPage";
-import DashboardPage from "@/pages/DashboardPage";
 import DeliveriesPage from "@/pages/DeliveriesPage";
-import PlaceholderPage from "@/pages/PlaceholderPage";
 import BeARiderPage from "@/pages/BeARiderPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import SingupPage from "@/pages/SingupPage";
 
 import AboutPage from "@/pages/AboutPage";
 import BookingPage from "@/pages/BookingPage";
+import ServicesPage from "@/pages/ServicesPage";
+import CoveragePage from "@/pages/CoveragePage";
+
+// User Pages
+import UserDashboardPage from "@/pages/UserDashboardPage";
+
+// Rider Pages
+import RiderDashboardPage from "@/pages/rider/RiderDashboardPage";
+import RiderDeliveriesPage from "@/pages/rider/RiderDeliveriesPage";
+import RiderEarningsPage from "@/pages/rider/RiderEarningsPage";
+
+// Admin Pages
+import AdminOverviewPage from "@/pages/admin/AdminOverviewPage";
+import AdminUsersPage from "@/pages/admin/AdminUsersPage";
+import AdminBookingsPage from "@/pages/admin/AdminBookingsPage";
 
 export const router = createBrowserRouter([
   // Public Routes (Wrapped in RootLayout with ZapShift Navbar)
@@ -26,48 +43,38 @@ export const router = createBrowserRouter([
       },
       {
         path: "services",
-        element: (
-          <PlaceholderPage
-            pageTitle="Our Services"
-            pageDescription="End-to-end e-commerce logistics, express courier services, and warehouse fulfillment."
-          />
-        ),
+        element: <ServicesPage />,
       },
       {
         path: "coverage",
-        element: (
-          <PlaceholderPage
-            pageTitle="Delivery Coverage"
-            pageDescription="ZapShift delivers to 64 districts and 495+ upazilas with verified local hubs."
-          />
-        ),
+        element: <CoveragePage />,
       },
       {
         path: "about",
         element: <AboutPage />,
       },
-      {
-        path: "booking",
-        element: <BookingPage />,
-      },
-      {
-        path: "tracking",
-        element: (
-          <PlaceholderPage
-            pageTitle="Tracking"
-            pageDescription="Track your delivery with Parcelio"
-          />
-        ),
-      },
-      {
-        path: "pricing",
-        element: (
-          <PlaceholderPage
-            pageTitle="Transparent Pricing"
-            pageDescription="Affordable and clear rates tailored for individual senders and enterprise merchants."
-          />
-        ),
-      },
+      // {
+      //   path: "booking",
+      //   element: <BookingPage />,
+      // },
+      // {
+      //   path: "tracking",
+      //   element: (
+      //     <PlaceholderPage
+      //       pageTitle="Tracking"
+      //       pageDescription="Track your delivery with Parcelio"
+      //     />
+      //   ),
+      // },
+      // {
+      //   path: "pricing",
+      //   element: (
+      //     <PlaceholderPage
+      //       pageTitle="Transparent Pricing"
+      //       pageDescription="Affordable and clear rates tailored for individual senders and enterprise merchants."
+      //     />
+      //   ),
+      // },
       {
         path: "be-a-rider",
         element: <BeARiderPage />,
@@ -87,24 +94,83 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Protected Routes (Guarded by ProtectedRoute and styled in DashboardLayout)
+  // Customer / User Protected Routes (Guarded by UserRoute and styled in UserDashboardLayout)
   {
-    path: "/dashboard",
-    element: <ProtectedRoute />,
+    path: "/user_dashboard",
+    element: <UserRoute />,
     children: [
       {
-        element: <DashboardLayout />,
+        element: <UserDashboardLayout />,
         children: [
           {
             index: true,
-            element: <DashboardPage />,
+            element: <UserDashboardPage />,
+          },
+          {
+            path:"booking",
+            element: <BookingPage />,
           },
           {
             path: "deliveries",
             element: <DeliveriesPage />,
+          },
+          {
+            path: "tracking",
+            element: <NotFoundPage />,
+          },
+        ],
+      },
+    ],
+  },
+
+  // Rider Protected Routes (Guarded by RiderRoute and styled in RiderLayout)
+  {
+    path: "/rider",
+    element: <RiderRoute />,
+    children: [
+      {
+        element: <RiderLayout />,
+        children: [
+          {
+            index: true,
+            element: <RiderDashboardPage />,
+          },
+          {
+            path: "deliveries",
+            element: <RiderDeliveriesPage />,
+          },
+          {
+            path: "earnings",
+            element: <RiderEarningsPage />,
+          },
+        ],
+      },
+    ],
+  },
+
+  // Admin Routes (Guarded by AdminRoute — requires admin role)
+  {
+    path: "/admin",
+    element: <AdminRoute />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <AdminOverviewPage />,
+          },
+          {
+            path: "users",
+            element: <AdminUsersPage />,
+          },
+          {
+            path: "bookings",
+            element: <AdminBookingsPage />,
           },
         ],
       },
     ],
   },
 ]);
+

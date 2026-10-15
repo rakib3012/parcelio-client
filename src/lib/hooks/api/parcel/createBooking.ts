@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+ 
 
 export interface BookingPayload {
   parcelType: "document" | "not-document";
@@ -15,6 +16,7 @@ export interface BookingPayload {
   receiverDistrict: string;
   deliveryInstruction?: string;
   paymentMethod?: "cash_on_delivery" | "online" | "bkash" | "nagad";
+  token?: string;
 }
 
 export interface BookingResponse {
@@ -53,27 +55,24 @@ interface ApiError {
   errors?: { field: string; message: string }[];
 }
 
-const submitBooking = async (
+export const submitBooking = async (
   bookingData: BookingPayload
 ): Promise<BookingResponse> => {
-  const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+   
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
+  const { token: token, ...requestData } = bookingData;
 
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/bookings`,
     {
       method: "POST",
-      headers,
+      headers:{
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        ...bookingData,
-        parcelWeight: Number(bookingData.parcelWeight),
+        ...requestData,
+        parcelWeight: Number(requestData.parcelWeight),
       }),
     }
   );

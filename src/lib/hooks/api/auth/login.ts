@@ -23,7 +23,7 @@ interface ApiError {
 }
 
 // ── Fetch function ──────────────────────────────────────────────
-const loginUser = async (
+export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<LoginResponse> => {
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {

@@ -1,8 +1,9 @@
-import { useState, type FormEvent, type ChangeEvent } from "react"
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react"
 import { useNavigate, Link } from "react-router"
 import { Loader2 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import { useRegister } from "@/lib/hooks/api/auth/register"
+import Cookies from "js-cookie"
 
 const GoogleIcon = () => (
   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -31,8 +32,17 @@ const SignupPage = () => {
   const [userPassword, setUserPassword] = useState("")
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const currentUser = useAuthStore((state) => state.currentUser)
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
+
+  // Auto-redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      navigate(currentUser.role === "admin" ? "/admin" : "/dashboard", { replace: true })
+    }
+  }, [isAuthenticated, currentUser, navigate])
 
   const {
     mutate: registerMutate,
@@ -63,7 +73,8 @@ const SignupPage = () => {
 
     registerMutate(registerData, {
       onSuccess: (data) => {
-        // Save token to localStorage
+        // Save token to cookie using js-cookie
+        Cookies.set("accessToken", data.data.token, { expires: 7, path: "/", sameSite: "lax" })
         localStorage.setItem("accessToken", data.data.token)
 
         // Update Zustand auth store

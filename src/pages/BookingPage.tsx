@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { useCreateBooking } from "@/lib/hooks/api/parcel"
+import { useCreateBooking } from "@/lib/hooks/api/parcel/createBooking"
+import Cookies from "js-cookie"
 import {
   Select,
   SelectContent,
@@ -208,10 +209,12 @@ export default function BookingPage() {
   // Final Confirmation
   const handleFinalBookingSubmit = (data: BookingFormData) => {
     setApiError(null)
+    const token = Cookies.get("accessToken")
     createBookingMutation.mutate(
       {
         ...data,
         parcelWeight: Number(data.parcelWeight),
+        token,
       },
       {
         onSuccess: (res) => {

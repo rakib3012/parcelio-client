@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { Package, Truck, CheckCircle2, PlusCircle, ArrowRight } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 
-const DashboardPage = () => {
+const UserDashboardPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser)
 
   return (
@@ -91,4 +91,4 @@ const DashboardPage = () => {
   )
 }
 
-export default DashboardPage
+export default UserDashboardPage

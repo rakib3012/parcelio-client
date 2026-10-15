@@ -25,7 +25,7 @@ interface ApiError {
 }
 
 // ── Fetch function ──────────────────────────────────────────────
-const registerUser = async (
+export const registerUser = async (
   userData: RegisterData
 ): Promise<RegisterResponse> => {
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {

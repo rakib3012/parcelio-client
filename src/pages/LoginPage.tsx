@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from "react"
+import { useState, useEffect, type FormEvent } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
 import { Loader2 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import { useLogin } from "@/lib/hooks/api/auth/login"
+import Cookies from "js-cookie"
 
 const GoogleIcon = () => (
   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -29,15 +30,11 @@ const LoginPage = () => {
   const [emailAddress, setEmailAddress] = useState("")
   const [userPassword, setUserPassword] = useState("")
 
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const currentUser = useAuthStore((state) => state.currentUser)
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
   const location = useLocation()
-
-  const {
-    mutate: loginMutate,
-    isPending,
-    error: mutationError,
-  } = useLogin()
 
   interface LocationStateWithRedirect {
     redirectedFromLocation?: {
@@ -46,8 +43,27 @@ const LoginPage = () => {
   }
 
   const locationState = location.state as LocationStateWithRedirect | null
+  const defaultDestination =
+    currentUser?.role === "admin"
+      ? "/admin"
+      : currentUser?.role === "rider"
+      ? "/rider"
+      : "/dashboard"
   const targetDestination =
-    locationState?.redirectedFromLocation?.pathname || "/dashboard"
+    locationState?.redirectedFromLocation?.pathname || defaultDestination
+
+  // Auto-redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      navigate(targetDestination, { replace: true })
+    }
+  }, [isAuthenticated, currentUser, navigate, targetDestination])
+
+  const {
+    mutate: loginMutate,
+    isPending,
+    error: mutationError,
+  } = useLogin()
 
   const handleFormSubmission = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -63,14 +79,24 @@ const LoginPage = () => {
       },
       {
         onSuccess: (data) => {
-          // Save token to localStorage
+          // Save token to cookie using js-cookie
+          Cookies.set("accessToken", data.data.token, { expires: 7, path: "/", sameSite: "lax" })
           localStorage.setItem("accessToken", data.data.token)
 
           // Update Zustand auth store
           login(data.data.userProfile)
 
-          // Navigate to dashboard or redirect target
-          navigate(targetDestination, { replace: true })
+          // Navigate to role-specific destination or original target
+          const userRole = data.data.userProfile.role
+          const roleDestination =
+            userRole === "admin"
+              ? "/admin"
+              : userRole === "rider"
+              ? "/rider"
+              : "/dashboard"
+          const destination =
+            locationState?.redirectedFromLocation?.pathname || roleDestination
+          navigate(destination, { replace: true })
         },
       }
     )

@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router"
-import { ArrowUpRight, Menu, X, LayoutDashboard, LogOut } from "lucide-react"
+import { ArrowUpRight, Menu, X, LayoutDashboard, LogOut, Shield, Bike } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
+import Cookies from "js-cookie"
 
 interface NavigationItem {
   label: string
@@ -12,9 +13,9 @@ const navigationItems: NavigationItem[] = [
   { label: "Services", destinationPath: "/services" },
   { label: "Coverage", destinationPath: "/coverage" },
   { label: "About Us", destinationPath: "/about" },
-  { label: "Booking", destinationPath: "/booking" },
-  { label: "Pricing", destinationPath: "/pricing" },
-  { label: "Tracking", destinationPath: "/tracking" },
+  // { label: "Booking", destinationPath: "/booking" },
+  // { label: "Pricing", destinationPath: "/pricing" },
+  // { label: "Tracking", destinationPath: "/tracking" },
   { label: "Be a Rider", destinationPath: "/be-a-rider" },
 ]
 
@@ -34,6 +35,9 @@ const Navbar = () => {
   }
 
   const handleUserLogout = () => {
+    Cookies.remove("accessToken", { path: "/" })
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("token")
     logout()
     setIsMobileMenuOpen(false)
     navigate("/")
@@ -85,13 +89,32 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-3">
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 hover:border-neutral-400 transition-colors shadow-xs"
-              >
-                <LayoutDashboard className="w-4 h-4 text-neutral-700" />
-                <span>Dashboard</span>
-              </Link>
+              {currentUser?.role === "admin" ? (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-white bg-neutral-900 hover:bg-neutral-800 rounded-full transition-colors shadow-xs"
+                >
+                  <Shield className="w-4 h-4 text-[#caea4d]" />
+                  <span>Admin</span>
+                </Link>
+              ) : currentUser?.role === "rider" ? (
+                <Link
+                  to="/rider"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-neutral-900 bg-[#CAEA3C] hover:bg-[#b8d82d] rounded-full transition-colors shadow-xs"
+                >
+                  <Bike className="w-4 h-4 text-neutral-900" />
+                  <span>Rider Hub</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/user_dashboard"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 hover:border-neutral-400 transition-colors shadow-xs"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-neutral-700" />
+                  <span>Dashboard</span>
+                </Link>
+              )}
+              
               <button
                 type="button"
                 onClick={handleUserLogout}
@@ -171,14 +194,35 @@ const Navbar = () => {
           <div className="pt-4 flex flex-col gap-2.5">
             {isAuthenticated ? (
               <>
-                <Link
-                  to="/dashboard"
-                  onClick={handleCloseMobileMenu}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  <span>Dashboard ({currentUser?.fullName})</span>
-                </Link>
+                {currentUser?.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    onClick={handleCloseMobileMenu}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-neutral-900 rounded-full hover:bg-neutral-800 transition-colors"
+                  >
+                    <Shield className="w-4 h-4 text-[#caea4d]" />
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
+                {currentUser?.role === "rider" ? (
+                  <Link
+                    to="/rider"
+                    onClick={handleCloseMobileMenu}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-neutral-950 bg-[#CAEA3C] hover:bg-[#b8d82d] rounded-full transition-colors"
+                  >
+                    <Bike className="w-4 h-4" />
+                    <span>Rider Hub ({currentUser?.fullName})</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/dashboard"
+                    onClick={handleCloseMobileMenu}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 transition-colors"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Dashboard ({currentUser?.fullName})</span>
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={handleUserLogout}

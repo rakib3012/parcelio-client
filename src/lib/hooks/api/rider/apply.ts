@@ -34,7 +34,7 @@ interface ApiError {
 }
 
 // ── Fetch function ──────────────────────────────────────────────
-const submitRiderApplication = async (
+export const submitRiderApplication = async (
   applicationData: RiderApplicationData
 ): Promise<RiderApplicationResponse> => {
   const response = await fetch(
