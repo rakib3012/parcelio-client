@@ -257,8 +257,8 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="w-full py-6 sm:py-10 bg-neutral-50/50 min-h-screen">
-      <div className="bg-white rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 shadow-xs max-w-5xl mx-auto">
+    <div className="w-full bg-neutral-50/50 min-h-screen">
+      <div className="bg-white rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 shadow-xs   ">
         {/* Header Title */}
         <header className="space-y-1">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B3B3C] tracking-tight">

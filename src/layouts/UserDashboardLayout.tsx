@@ -12,7 +12,7 @@ import {
   Menu,
   X,
   ArrowLeft,
-  Plus,
+ 
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import Cookies from "js-cookie"
@@ -86,9 +86,9 @@ const UserDashboardLayout = () => {
       {/* Sidebar Navigation */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen z-40 bg-[#1C1D20] text-white flex flex-col flex-shrink-0
+          fixed top-0 left-0 h-screen z-40 bg-[#1C1D20] text-white flex flex-col shrink-0
           transition-all duration-300 ease-in-out
-          ${collapsed ? "w-[72px]" : "w-[260px]"}
+          ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:h-screen
         `}
@@ -101,7 +101,7 @@ const UserDashboardLayout = () => {
         >
           {!collapsed ? (
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
                 <Package className="w-4 h-4 text-neutral-900" />
               </div>
               <div className="flex flex-col min-w-0">
@@ -152,7 +152,7 @@ const UserDashboardLayout = () => {
               {({ isActive }) => (
                 <>
                   <link.icon
-                    className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                    className={`w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                       isActive ? "text-neutral-900" : ""
                     }`}
                   />
@@ -199,7 +199,7 @@ const UserDashboardLayout = () => {
                 }
                 title={collapsed ? "Admin Panel" : undefined}
               >
-                <Shield className="w-5 h-5 flex-shrink-0" />
+                <Shield className="w-5 h-5 shrink-0" />
                 {!collapsed && (
                   <div className="flex items-center justify-between flex-1 min-w-0">
                     <span className="truncate">Admin Panel</span>
@@ -213,35 +213,11 @@ const UserDashboardLayout = () => {
           )}
         </nav>
 
-        {/* Promo / Quick Booking Card (desktop expanded only) */}
-        {!collapsed && (
-          <div className="mx-3 mb-3 p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#CAEA3C]/20 text-[#CAEA3C] flex items-center justify-center flex-shrink-0">
-                <Send className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-semibold text-white">
-                Fast Courier Booking
-              </span>
-            </div>
-            <p className="text-[11px] text-white/60 leading-snug">
-              Need to send a new parcel? Create a shipment now with instant rate
-              calculation.
-            </p>
-            <Link
-              to="/dashboard/booking"
-              className="mt-1 w-full text-center py-2 px-3 rounded-xl bg-[#CAEA3C] hover:bg-[#b8d82d] text-neutral-900 font-semibold text-xs transition-colors shadow-xs"
-            >
-              Book Shipment
-            </Link>
-          </div>
-        )}
-
         {/* Sidebar Footer — User Profile & Sign Out */}
         <div className="border-t border-white/10 p-3 space-y-2">
           {!collapsed ? (
             <div className="flex items-center gap-3 px-2 py-1.5 rounded-xl bg-white/5">
-              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                 {userInitial}
               </div>
               <div className="flex flex-col min-w-0">
@@ -273,7 +249,7 @@ const UserDashboardLayout = () => {
               }`}
               title="Sign Out"
             >
-              <LogOut className="w-4 h-4 flex-shrink-0" />
+              <LogOut className="w-4 h-4 shrink-0" />
               {!collapsed && <span>Sign Out</span>}
             </button>
           </div>
@@ -298,7 +274,7 @@ const UserDashboardLayout = () => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
         {/* Sticky Top Header Bar */}
-        <header className="h-16 flex-shrink-0 bg-white/95 backdrop-blur-md border-b border-neutral-200/80 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <header className="h-16 shrink-0 bg-white/95 backdrop-blur-md border-b border-neutral-200/80 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left section: mobile hamburger & portal badge */}
           <div className="flex items-center gap-3">
             <button
@@ -320,15 +296,6 @@ const UserDashboardLayout = () => {
 
           {/* Right section: Quick actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Direct Booking CTA */}
-            <Link
-              to="/dashboard/booking"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold bg-[#CAEA3C] text-neutral-900 hover:bg-[#b8d82d] px-3.5 py-2 rounded-xl transition-all shadow-xs"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Book Parcel</span>
-            </Link>
-
             {/* Back to main website link */}
             <Link
               to="/"
@@ -355,7 +322,7 @@ const UserDashboardLayout = () => {
                 {userInitial}
               </div>
               <div className="hidden xl:flex flex-col text-left leading-tight">
-                <span className="text-xs font-semibold text-neutral-900 truncate max-w-[120px]">
+                <span className="text-xs font-semibold text-neutral-900 truncate max-w-30">
                   {currentUser?.fullName || "Active User"}
                 </span>
                 <span className="text-[10px] text-neutral-500">Sender</span>

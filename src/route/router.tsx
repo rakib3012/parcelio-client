@@ -12,6 +12,7 @@ import DeliveriesPage from "@/pages/DeliveriesPage";
 import BeARiderPage from "@/pages/BeARiderPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import SingupPage from "@/pages/SingupPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 
 import AboutPage from "@/pages/AboutPage";
 import BookingPage from "@/pages/BookingPage";
@@ -86,6 +87,14 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         element: <SingupPage />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: "forget-password",
+        element: <ForgotPasswordPage />,
       },
       {
         path: "*",

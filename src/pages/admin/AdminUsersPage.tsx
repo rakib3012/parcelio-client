@@ -289,7 +289,7 @@ const AdminUsersPage = () => {
             {/* Mobile Cards */}
             <div className="md:hidden divide-y divide-neutral-100">
               {users.map((user) => (
-                <div key={user._id || user.identifier || user.id} className="p-4 space-y-3">
+                <div key={user._id} className="p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neutral-200 to-neutral-300 text-neutral-600 flex items-center justify-center font-bold text-sm">

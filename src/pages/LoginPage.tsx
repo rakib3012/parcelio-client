@@ -1,14 +1,37 @@
-import { useState, useEffect, type FormEvent } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
-import { Loader2 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import { useLogin } from "@/lib/hooks/api/auth/login"
 import Cookies from "js-cookie"
 import { GoogleIcon } from "@/components/ui/GoogleIcon"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+// ---------------------------------------------------------------------------
+// Zod Validation Schema
+// ---------------------------------------------------------------------------
+const loginSchema = z.object({
+  emailAddress: z
+    .string()
+    .trim()
+    .min(1, { message: "Email address is required" })
+    .email({ message: "Please provide a valid email address" }),
+  password: z
+    .string()
+    .min(1, { message: "Password is required" })
+    .min(6, { message: "Password must be at least 6 characters" }),
+})
+
+type LoginFormValues = z.infer<typeof loginSchema>
 
 const LoginPage = () => {
-  const [emailAddress, setEmailAddress] = useState("")
-  const [userPassword, setUserPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const currentUser = useAuthStore((state) => state.currentUser)
@@ -32,6 +55,18 @@ const LoginPage = () => {
   const targetDestination =
     locationState?.redirectedFromLocation?.pathname || defaultDestination
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      emailAddress: "",
+      password: "",
+    },
+  })
+
   // Auto-redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && currentUser) {
@@ -45,17 +80,11 @@ const LoginPage = () => {
     error: mutationError,
   } = useLogin()
 
-  const handleFormSubmission = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    if (!emailAddress.trim() || !userPassword.trim()) {
-      return
-    }
-
+  const onFormSubmit = (values: LoginFormValues) => {
     loginMutate(
       {
-        emailAddress: emailAddress.trim(),
-        password: userPassword.trim(),
+        emailAddress: values.emailAddress.trim(),
+        password: values.password.trim(),
       },
       {
         onSuccess: (data) => {
@@ -66,7 +95,7 @@ const LoginPage = () => {
           // Update Zustand auth store
           login(data.data.userProfile)
 
-          // Navigate to role-specific destination or original target
+          // Role-based destination logic
           const userRole = data.data.userProfile.role
           const roleDestination =
             userRole === "admin"
@@ -120,59 +149,70 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Form */}
-            <form onSubmit={handleFormSubmission} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="loginEmail"
-                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
-                >
-                  Email
-                </label>
-                <input
+            {/* Form with React Hook Form + Zod */}
+            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4" noValidate>
+              <div className="space-y-1">
+                <Label htmlFor="loginEmail">Email</Label>
+                <Input
                   id="loginEmail"
                   type="email"
-                  value={emailAddress}
-                  onChange={(e) => setEmailAddress(e.target.value)}
-                  placeholder="Email"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
-                  required
+                  placeholder="name@example.com"
+                  {...register("emailAddress")}
+                  className={cn(
+                    "h-10 text-sm focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                    errors.emailAddress && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                  )}
                   disabled={isPending}
                 />
+                {errors.emailAddress && (
+                  <p className="text-xs text-red-600 mt-1">{errors.emailAddress.message}</p>
+                )}
               </div>
 
-              <div>
-                <label
-                  htmlFor="loginPassword"
-                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
-                >
-                  Password
-                </label>
-                <input
-                  id="loginPassword"
-                  type="password"
-                  value={userPassword}
-                  onChange={(e) => setUserPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
-                  required
-                  disabled={isPending}
-                />
+              <div className="space-y-1">
+                <Label htmlFor="loginPassword">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="loginPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    {...register("password")}
+                    className={cn(
+                      "h-10 text-sm pr-10 focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                      errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    )}
+                    disabled={isPending}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors focus:outline-none cursor-pointer"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-xs text-red-600 mt-1">{errors.password.message}</p>
+                )}
                 <div className="mt-1.5 text-left">
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
+                  <Link
+                    to="/forgot-password"
                     className="text-xs text-neutral-500 hover:text-neutral-900 underline-offset-2 hover:underline transition-colors"
                   >
                     Forget Password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-2.5 px-4 rounded-lg bg-[#caea4d] hover:bg-[#bde03a] active:scale-[0.99] text-neutral-900 text-sm font-bold transition-all shadow-xs disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer mt-2"
+                className="w-full h-10 mt-2 rounded-lg bg-[#caea4d] hover:bg-[#bde03a] active:scale-[0.99] text-neutral-900 text-sm font-bold transition-all shadow-xs disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isPending ? (
                   <>
@@ -182,7 +222,7 @@ const LoginPage = () => {
                 ) : (
                   <span>Login</span>
                 )}
-              </button>
+              </Button>
             </form>
 
             {/* Don't have account */}
@@ -202,13 +242,14 @@ const LoginPage = () => {
             </div>
 
             {/* Google Login Button */}
-            <button
+            <Button
               type="button"
-              className="w-full py-2.5 px-4 rounded-lg bg-[#eef2f6] hover:bg-[#e2e8f0] text-neutral-800 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2.5 border border-transparent cursor-pointer"
+              variant="outline"
+              className="w-full h-10 rounded-lg bg-[#eef2f6] hover:bg-[#e2e8f0] text-neutral-800 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2.5 border-transparent cursor-pointer"
             >
               <GoogleIcon />
               <span>Login with google</span>
-            </button>
+            </Button>
           </div>
         </div>
 

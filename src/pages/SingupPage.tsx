@@ -1,15 +1,49 @@
-import { useState, useEffect, type FormEvent, type ChangeEvent } from "react"
+import { useState, useEffect, type ChangeEvent } from "react"
 import { useNavigate, Link } from "react-router"
-import { Loader2 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import { useRegister } from "@/lib/hooks/api/auth/register"
 import Cookies from "js-cookie"
 import { GoogleIcon } from "@/components/ui/GoogleIcon"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+// ---------------------------------------------------------------------------
+// Zod Validation Schema
+// ---------------------------------------------------------------------------
+const signupSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, { message: "Full name must be at least 2 characters" })
+    .max(100, { message: "Full name cannot exceed 100 characters" }),
+  emailAddress: z
+    .string()
+    .trim()
+    .min(1, { message: "Email address is required" })
+    .email({ message: "Please provide a valid email address" }),
+  phone: z
+    .string()
+    .trim()
+    .refine((val) => !val || (val.length === 11), {
+      message: "Phone number must be 11 digits",
+    })
+    .optional(),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" })
+    .max(128, { message: "Password cannot exceed 128 characters" }),
+})
+
+type SignupFormValues = z.infer<typeof signupSchema>
 
 const SignupPage = () => {
-  const [fullName, setFullName] = useState("")
-  const [emailAddress, setEmailAddress] = useState("")
-  const [userPassword, setUserPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -17,10 +51,31 @@ const SignupPage = () => {
   const login = useAuthStore((state) => state.login)
   const navigate = useNavigate()
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      fullName: "",
+      emailAddress: "",
+      phone: "",
+      password: "",
+    },
+  })
+
   // Auto-redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && currentUser) {
-      navigate(currentUser.role === "admin" ? "/admin" : "/dashboard", { replace: true })
+      navigate(
+        currentUser.role === "admin"
+          ? "/admin"
+          : currentUser.role === "rider"
+          ? "/rider"
+          : "/user_dashboard",
+        { replace: true }
+      )
     }
   }, [isAuthenticated, currentUser, navigate])
 
@@ -38,17 +93,20 @@ const SignupPage = () => {
     }
   }
 
-  const handleFormSubmission = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    if (!fullName.trim() || !emailAddress.trim() || !userPassword.trim()) {
-      return
+  const onFormSubmit = (values: SignupFormValues) => {
+    const registerData: {
+      fullName: string
+      emailAddress: string
+      password: string
+      phone?: string
+    } = {
+      fullName: values.fullName.trim(),
+      emailAddress: values.emailAddress.trim(),
+      password: values.password.trim(),
     }
 
-    const registerData = {
-      fullName: fullName.trim(),
-      emailAddress: emailAddress.trim(),
-      password: userPassword.trim(),
+    if (values.phone && values.phone.trim()) {
+      registerData.phone = values.phone.trim()
     }
 
     registerMutate(registerData, {
@@ -60,8 +118,14 @@ const SignupPage = () => {
         // Update Zustand auth store
         login(data.data.userProfile)
 
-        // Navigate to dashboard
-        navigate("/dashboard", { replace: true })
+        // Navigate to appropriate dashboard
+        const roleDestination =
+          data.data.userProfile.role === "admin"
+            ? "/admin"
+            : data.data.userProfile.role === "rider"
+            ? "/rider"
+            : "/user_dashboard"
+        navigate(roleDestination, { replace: true })
       },
     })
   }
@@ -94,7 +158,7 @@ const SignupPage = () => {
               </p>
             </div>
 
-            {/* Avatar Upload Icon as shown in screenshot */}
+            {/* Avatar Upload Icon */}
             <div className="mb-4">
               <label
                 htmlFor="avatarUploadInput"
@@ -137,70 +201,98 @@ const SignupPage = () => {
               </div>
             )}
 
-            {/* Form */}
-            <form onSubmit={handleFormSubmission} className="space-y-3.5">
-              <div>
-                <label
-                  htmlFor="registerName"
-                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
-                >
-                  Name
-                </label>
-                <input
+            {/* Form with React Hook Form + Zod */}
+            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-3" noValidate>
+              <div className="space-y-1">
+                <Label htmlFor="registerName">Name</Label>
+                <Input
                   id="registerName"
                   type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Name"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
-                  required
+                  placeholder="Full name"
+                  {...register("fullName")}
+                  className={cn(
+                    "h-10 text-sm focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                    errors.fullName && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                  )}
                   disabled={isPending}
                 />
+                {errors.fullName && (
+                  <p className="text-xs text-red-600 mt-1">{errors.fullName.message}</p>
+                )}
               </div>
 
-              <div>
-                <label
-                  htmlFor="registerEmail"
-                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
-                >
-                  Email
-                </label>
-                <input
+              <div className="space-y-1">
+                <Label htmlFor="registerEmail">Email</Label>
+                <Input
                   id="registerEmail"
                   type="email"
-                  value={emailAddress}
-                  onChange={(e) => setEmailAddress(e.target.value)}
-                  placeholder="Email"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
-                  required
+                  placeholder="name@example.com"
+                  {...register("emailAddress")}
+                  className={cn(
+                    "h-10 text-sm focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                    errors.emailAddress && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                  )}
                   disabled={isPending}
                 />
+                {errors.emailAddress && (
+                  <p className="text-xs text-red-600 mt-1">{errors.emailAddress.message}</p>
+                )}
               </div>
 
-              <div>
-                <label
-                  htmlFor="registerPassword"
-                  className="block text-xs font-semibold text-neutral-800 mb-1.5"
-                >
-                  Password
-                </label>
-                <input
-                  id="registerPassword"
-                  type="password"
-                  value={userPassword}
-                  onChange={(e) => setUserPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-neutral-300 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#caea4d] focus:border-transparent transition-all"
-                  required
-                  minLength={6}
+              <div className="space-y-1">
+                <Label htmlFor="registerPhone">Phone Number</Label>
+                <Input
+                  id="registerPhone"
+                  type="tel"
+                  placeholder="e.g. 01700000000"
+                  {...register("phone")}
+                  className={cn(
+                    "h-10 text-sm focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                    errors.phone && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                  )}
                   disabled={isPending}
                 />
+                {errors.phone && (
+                  <p className="text-xs text-red-600 mt-1">{errors.phone.message}</p>
+                )}
               </div>
 
-              <button
+              <div className="space-y-1">
+                <Label htmlFor="registerPassword">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="registerPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Min. 6 characters"
+                    {...register("password")}
+                    className={cn(
+                      "h-10 text-sm pr-10 focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
+                      errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    )}
+                    disabled={isPending}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 transition-colors focus:outline-none cursor-pointer"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-xs text-red-600 mt-1">{errors.password.message}</p>
+                )}
+              </div>
+
+              <Button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-2.5 px-4 rounded-lg bg-[#caea4d] hover:bg-[#bde03a] active:scale-[0.99] text-neutral-900 text-sm font-bold transition-all shadow-xs disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer mt-2"
+                className="w-full h-10 mt-2 rounded-lg bg-[#caea4d] hover:bg-[#bde03a] active:scale-[0.99] text-neutral-900 text-sm font-bold transition-all shadow-xs disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isPending ? (
                   <>
@@ -210,7 +302,7 @@ const SignupPage = () => {
                 ) : (
                   <span>Register</span>
                 )}
-              </button>
+              </Button>
             </form>
 
             {/* Already have account */}
@@ -230,13 +322,14 @@ const SignupPage = () => {
             </div>
 
             {/* Google Register Button */}
-            <button
+            <Button
               type="button"
-              className="w-full py-2.5 px-4 rounded-lg bg-[#eef2f6] hover:bg-[#e2e8f0] text-neutral-800 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2.5 border border-transparent cursor-pointer"
+              variant="outline"
+              className="w-full h-10 rounded-lg bg-[#eef2f6] hover:bg-[#e2e8f0] text-neutral-800 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2.5 border-transparent cursor-pointer"
             >
               <GoogleIcon />
               <span>Register with google</span>
-            </button>
+            </Button>
           </div>
         </div>
 

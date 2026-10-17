@@ -74,7 +74,7 @@ export function UserFormModal({
 
     if (isEditing) {
       const payload: UpdateUserPayload = {
-        id: user?._id || user?.identifier || user?.id || "",
+        id: user?._id || "",
         fullName: formData.fullName,
         emailAddress: formData.emailAddress,
         phone: formData.phone,

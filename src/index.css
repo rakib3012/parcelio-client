@@ -127,4 +127,14 @@
   html {
     @apply font-sans;
     }
+
+  input[type="password"] {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: 0.12em;
+  }
+
+  input[type="password"]::placeholder {
+    font-family: var(--font-sans);
+    letter-spacing: normal;
+  }
 }
