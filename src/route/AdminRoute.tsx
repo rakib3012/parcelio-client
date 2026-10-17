@@ -36,7 +36,7 @@ export const AdminRoute = () => {
   // If authenticated directly from store, check role
   if (isAuthenticated) {
     if (currentUser?.role !== "admin") {
-      return <Navigate to="/dashboard" replace />
+      return <Navigate to="/user_dashboard" replace />
     }
     return <Outlet />
   }

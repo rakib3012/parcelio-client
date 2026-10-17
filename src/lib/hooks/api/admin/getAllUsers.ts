@@ -3,7 +3,9 @@ import Cookies from "js-cookie";
 
 // ── Request & Response types ────────────────────────────────────
 export interface AdminUser {
-  identifier: string;
+  id: string;
+  identifier?: string;
+  _id?: string;
   fullName: string;
   emailAddress: string;
   phone: string;

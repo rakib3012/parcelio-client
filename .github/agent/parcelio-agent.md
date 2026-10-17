@@ -158,10 +158,11 @@ REQUIRED FILE PLACEMENT
 
 - Page: src/pages/
 - UI component: src/components/ui/
-- Shared component: src/components/
+- Shared/Feature component: src/components/<Feature>/
+- Modals: src/components/Modal/
 - Layout: src/layouts/
 - Hook: src/lib/hooks/
-- API hook: src/lib/hooks/api/
+- API hook: src/lib/hooks/api/<domain>/
 - Store: src/lib/store/
 - Context: src/lib/context/
 - Type: src/lib/types/
@@ -222,13 +223,16 @@ Never do this:
 
 API INTEGRATION RULES
 
-All requests must live in hooks under src/lib/hooks/api/.
+All requests must live in hooks under src/lib/hooks/api/<domain>/.
 
-Use TanStack Query for async server-state access and mutation flows when applicable.
-
-Do not call fetch or axios directly inside page or component files.
-
-Keep the request logic separate from the rendering logic.
+- STRICTLY ONE OPERATION PER FILE: Every API hook file must contain only ONE operation — one fetch function and one React Query hook (e.g., `getAllBookings.ts`, `updateBookingStatus.ts`).
+- NEVER combine multiple endpoints/methods in one file (never bundle multiple queries and mutations into a generic file like `bookings.ts`).
+- Named exports required for BOTH the fetch function and the hook (`export const fetchUser = ...`, `export const useUser = ...`).
+- No barrel re-exports: Do not create or use barrel files (`index.ts`). Pages and components must import directly from the specific hook file.
+- Self-contained: Each hook file must define its own types or import shared types from `src/lib/types/`. Do not cross-import domain models from sibling hook files.
+- Use TanStack Query for async server-state access and mutation flows when applicable.
+- Do not call fetch or axios directly inside page or component files.
+- Keep the request logic separate from the rendering logic.
 
 TYPESCRIPT RULES
 
@@ -307,6 +311,9 @@ COMPONENT DESIGN RULES
 
 Components must be:
 
+- Strictly ONE COMPONENT PER FILE: Every single component (including helper components, badges, cards, list items, custom SVGs/icons) must be created in its own separate file. NEVER declare multiple components in a single file.
+- Dedicated Modal Folder (`src/components/Modal/`): All modals and dialogs must live in `src/components/Modal/` as separate component files. Never define inline modal JSX in pages.
+- Separation of Page and Feature Components: Page files in `src/pages/` must only compose and orchestrate views. Sub-components must be placed in `src/components/<Feature>/` (e.g. `src/components/AdminComponent/`) or `src/components/ui/`.
 - Reusable
 - Single-responsibility
 - Fully typed
@@ -315,6 +322,8 @@ Components must be:
 
 Avoid:
 
+- Defining multiple components in one file
+- Defining inline modals inside pages
 - Massive components
 - Deep prop drilling
 - Duplicate UI logic

@@ -8,10 +8,8 @@ import {
   Package,
   Copy,
   Check,
-  ArrowRight,
   Truck,
   RotateCcw,
-  Loader2,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,6 +28,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useAuthStore } from "@/lib/store/authStore"
 import { Link } from "react-router"
+import { BookingConfirmModal } from "@/components/Modal/BookingConfirmModal"
 
 // ---------------------------------------------------------------------------
 // 1. Zod Validation Schema
@@ -814,93 +813,27 @@ export default function BookingPage() {
       </div>
 
       {/* Confirmation Modal */}
-      {isConfirmModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-xl border border-neutral-100">
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold text-[#0B3B3C]">
-                Confirm Booking Details
-              </h3>
-              <p className="text-xs text-neutral-500">
-                Please review your parcel shipment details before placing the order.
-              </p>
-            </div>
-
-            <div className="space-y-3.5 text-xs text-neutral-700 bg-neutral-50 p-4 rounded-2xl border border-neutral-200/80">
-              <div className="flex justify-between border-b border-neutral-200/60 pb-2">
-                <span className="text-neutral-500">Parcel:</span>
-                <span className="font-semibold text-neutral-900">
-                  {watch("parcelName")} ({watch("parcelWeight")} KG, {watch("parcelType")})
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-neutral-200/60 pb-2">
-                <span className="text-neutral-500">Pickup From:</span>
-                <span className="font-semibold text-neutral-900 text-right">
-                  {watch("senderName")} ({watch("senderDistrict")})
-                  <br />
-                  <span className="text-[11px] text-neutral-500 font-normal">
-                    {watch("senderAddress")} • {watch("senderPhone")}
-                  </span>
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-neutral-200/60 pb-2">
-                <span className="text-neutral-500">Delivery To:</span>
-                <span className="font-semibold text-neutral-900 text-right">
-                  {watch("receiverName")} ({watch("receiverDistrict")})
-                  <br />
-                  <span className="text-[11px] text-neutral-500 font-normal">
-                    {watch("receiverAddress")} • {watch("receiverPhone")}
-                  </span>
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-neutral-200/60 pb-2">
-                <span className="text-neutral-500">Pickup Slot:</span>
-                <span className="font-semibold text-neutral-900">Today, 4:00 PM – 7:00 PM</span>
-              </div>
-              <div className="flex justify-between pt-1 text-sm font-bold text-[#0B3B3C]">
-                <span>Estimated Cost:</span>
-                <span>৳ {estimatedCost} BDT</span>
-              </div>
-            </div>
-
-            {apiError && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-xs text-red-700">
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                <span>{apiError}</span>
-              </div>
-            )}
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                disabled={createBookingMutation.isPending}
-                onClick={() => setIsConfirmModalOpen(false)}
-                className="px-5 py-2.5 rounded-lg border border-neutral-300 text-neutral-700 text-sm font-semibold hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-              >
-                Back to Edit
-              </button>
-              <button
-                type="button"
-                disabled={createBookingMutation.isPending}
-                onClick={() => handleFinalBookingSubmit(watch())}
-                className="px-6 py-2.5 rounded-lg bg-[#B7F436] hover:bg-[#a5e426] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-900 text-sm font-bold transition-colors cursor-pointer flex items-center gap-2 shadow-xs"
-              >
-                {createBookingMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Placing Booking...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Confirm & Place Order</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <BookingConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={() => handleFinalBookingSubmit(watch())}
+        isPending={createBookingMutation.isPending}
+        apiError={apiError}
+        estimatedCost={estimatedCost}
+        details={{
+          parcelName: watch("parcelName"),
+          parcelWeight: watch("parcelWeight"),
+          parcelType: watch("parcelType"),
+          senderName: watch("senderName"),
+          senderDistrict: watch("senderDistrict"),
+          senderAddress: watch("senderAddress"),
+          senderPhone: watch("senderPhone"),
+          receiverName: watch("receiverName"),
+          receiverDistrict: watch("receiverDistrict"),
+          receiverAddress: watch("receiverAddress"),
+          receiverPhone: watch("receiverPhone"),
+        }}
+      />
     </div>
   )
 }

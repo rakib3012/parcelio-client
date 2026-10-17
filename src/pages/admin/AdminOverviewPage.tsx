@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { useAdminDashboardStats } from "@/lib/hooks/api/admin/getDashboardStats"
 import Cookies from "js-cookie"
+import { StatsCard } from "@/components/AdminComponent/StatsCard"
 
 const AdminOverviewPage = () => {
   const token = Cookies.get("accessToken")
@@ -223,41 +224,5 @@ const AdminOverviewPage = () => {
   )
 }
 
-// ── Reusable Stats Card ────────────────────────────────────────
-
-function StatsCard({
-  label,
-  value,
-  icon: Icon,
-  iconBg,
-  iconColor,
-  subtitle,
-  isRevenue = false,
-}: {
-  label: string
-  value: string | number
-  icon: React.ComponentType<{ className?: string }>
-  iconBg: string
-  iconColor: string
-  subtitle: string
-  isRevenue?: boolean
-}) {
-  return (
-    <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs hover:shadow-sm transition-shadow">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-          {label}
-        </span>
-        <div className={`w-9 h-9 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center`}>
-          <Icon className="w-4.5 h-4.5" />
-        </div>
-      </div>
-      <p className={`mt-2 font-bold text-neutral-900 ${isRevenue ? "text-xl" : "text-2xl"}`}>
-        {value}
-      </p>
-      <p className="text-xs text-neutral-400 mt-1">{subtitle}</p>
-    </div>
-  )
-}
-
 export default AdminOverviewPage
+

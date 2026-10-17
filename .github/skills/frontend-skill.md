@@ -26,14 +26,17 @@ Before editing:
 While editing:
 
 1. Make the smallest correct change.
-2. Keep page files in `src/pages/`.
-3. Keep shared components in `src/components/` and UI primitives in `src/components/ui/`.
-4. Keep layouts in `src/layouts/`.
-5. Keep hooks in `src/lib/hooks/` and API hooks in `src/lib/hooks/api/`.
-6. Keep stores in `src/lib/store/`, contexts in `src/lib/context/`, types in `src/lib/types/`, utilities in `src/lib/`, and routes in `src/route/`.
-7. Keep API request logic outside page and component files.
-8. Use TanStack Query for server-state requests and mutations when appropriate.
-9. Use React Hook Form and Zod for forms when appropriate.
+2. Keep page files in `src/pages/`. Pages must ONLY orchestrate views, never contain multiple components or inline modals.
+3. Strictly ONE COMPONENT PER FILE: Every single component (helper, badge, card, section, icon) must live in its own separate file.
+4. Keep modals in `src/components/Modal/`. Never write inline modals inside page files.
+5. Keep shared components in `src/components/<Feature>/` and UI primitives in `src/components/ui/`.
+6. Keep layouts in `src/layouts/`.
+7. Keep hooks in `src/lib/hooks/` and API hooks in `src/lib/hooks/api/<domain>/`.
+8. Strictly ONE OPERATION PER FILE for API hooks: each hook file must implement only one fetch function and one React Query hook. Never combine multiple methods in one file.
+9. Keep stores in `src/lib/store/`, contexts in `src/lib/context/`, types in `src/lib/types/`, utilities in `src/lib/`, and routes in `src/route/`.
+10. Keep API request logic outside page and component files.
+11. Use TanStack Query for server-state requests and mutations when appropriate.
+12. Use React Hook Form and Zod for forms when appropriate.
 
 ## Human-Readable Code Rules
 

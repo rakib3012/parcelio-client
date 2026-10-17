@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // ── Request & Response types ────────────────────────────────────
 export interface AdminUser {
-  identifier: string;
+  id: string;
   fullName: string;
   emailAddress: string;
   phone: string;

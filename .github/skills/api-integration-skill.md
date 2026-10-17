@@ -38,8 +38,10 @@ This skill applies only to the frontend API layer. The repository is a Vite + Re
 - Do not duplicate endpoint strings, request logic, or response transformations.
 - Do not add a new HTTP client or dependency unless the task explicitly requires it and it is intentionally installed.
 
-## Export Rules & Self-Contained Files
+## Single-Operation Hook Files & Export Rules
 
+- **STRICTLY ONE OPERATION PER FILE**: Every API hook file in `src/lib/hooks/api/<domain>/` MUST contain only ONE operation — exactly one fetch function and its corresponding React Query hook (e.g. `getAllBookings.ts` contains `fetchAllBookings` + `useAdminBookings`; `updateBookingStatus.ts` contains `updateBookingStatus` + `useUpdateBookingStatus`).
+- **NEVER Combine Multiple Methods in One File**: Never bundle multiple queries or mutations into a generic file (e.g. do not create a `bookings.ts` with both `fetchAllBookings` and `updateBookingStatus`). Every operation must be placed in its own file named explicitly after that action.
 - **Named Exports for Both Fetch Function & Hook**: Every hook file MUST export both its fetch function AND its React Query hook as named exports (e.g., `export const createUser = async (...) => ...` and `export const useCreateUser = () => ...`).
 - **No Barrel Re-Exports**: Do NOT create or use barrel files (`index.ts` / `users.ts` with `export * from './...'`) to re-export hooks from separate files. Pages and components must import directly from the specific file where the hook is defined.
 - **Self-Contained Files**: Each hook file must be completely self-contained. Do NOT import types or models from sibling hook files. Declare types directly within the file or in `src/lib/types/`.

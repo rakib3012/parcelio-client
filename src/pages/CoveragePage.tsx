@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  ExternalLink,
   X,
   ChevronDown,
   Globe2,
@@ -19,6 +18,7 @@ import {
   Check,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
+import { DistrictHubModal } from "@/components/Modal/DistrictHubModal"
 
 export interface WarehouseLocation {
   region: string
@@ -793,130 +793,19 @@ export default function CoveragePage() {
       </section>
 
       {/* Modal: District & Hub Details */}
-      {modalLocation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div
-            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-neutral-200 space-y-6 relative max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-100 text-xs font-semibold text-neutral-700">
-                  {modalLocation.region} Division
-                </span>
-                <h3 className="text-2xl font-extrabold text-neutral-900 mt-1.5">
-                  {modalLocation.district} District Hub
-                </h3>
-                <p className="text-xs text-neutral-500 mt-0.5">
-                  Operating City Center: {modalLocation.city}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setModalLocation(null)}
-                className="p-2 rounded-full hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition-colors"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Quick Metrics */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-neutral-50 rounded-2xl p-3 border border-neutral-100">
-                <span className="text-[11px] text-neutral-500 font-medium">Delivery SLA</span>
-                <p className="text-sm font-bold text-neutral-900 mt-0.5">
-                  {getTimelineForDistrict(modalLocation.district, modalLocation.region)}
-                </p>
-              </div>
-              <div className="bg-neutral-50 rounded-2xl p-3 border border-neutral-100">
-                <span className="text-[11px] text-neutral-500 font-medium">Hub Status</span>
-                <p className="text-sm font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Active & Dispatching
-                </p>
-              </div>
-            </div>
-
-            {/* List of Covered Upazilas */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
-                Full Upazila / Thana Coverage ({modalLocation.covered_area?.length || 0}):
-              </h4>
-              <div className="flex flex-wrap gap-1.5 p-3.5 bg-neutral-50 rounded-2xl border border-neutral-100 max-h-48 overflow-y-auto">
-                {modalLocation.covered_area && modalLocation.covered_area.length > 0 ? (
-                  modalLocation.covered_area.map((area, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-neutral-200 text-neutral-800 text-xs font-medium"
-                    >
-                      {area}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-xs text-neutral-500 italic">
-                    Covers all municipal, thana, and union addresses in {modalLocation.district}.
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Hub Features */}
-            <div className="space-y-2 text-xs text-neutral-600">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Door-to-door residential and commercial delivery</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Cash on Delivery (COD) collection & automated merchant payout</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Daily scheduled reverse logistics for e-commerce returns</span>
-              </div>
-            </div>
-
-            {/* Location coordinates & external map */}
-            {modalLocation.latitude && modalLocation.longitude && (
-              <div className="pt-2 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500">
-                <span>
-                  GPS: {modalLocation.latitude.toFixed(4)}, {modalLocation.longitude.toFixed(4)}
-                </span>
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${modalLocation.latitude},${modalLocation.longitude}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#03332D] hover:underline font-semibold flex items-center gap-1"
-                >
-                  <span>Open in Google Maps</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="pt-2 flex items-center gap-3">
-              <Link
-                to={bookingLink}
-                onClick={() => setModalLocation(null)}
-                className="flex-1 py-3 px-4 rounded-full bg-[#CAEA3C] text-neutral-950 font-bold text-center text-xs hover:bg-[#b8d82d] transition-all shadow-xs"
-              >
-                Book Parcel to {modalLocation.district}
-              </Link>
-              <button
-                type="button"
-                onClick={() => setModalLocation(null)}
-                className="py-3 px-5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-semibold text-xs transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DistrictHubModal
+        location={modalLocation}
+        onClose={() => setModalLocation(null)}
+        timelineText={
+          modalLocation
+            ? getTimelineForDistrict(
+                modalLocation.district,
+                modalLocation.region
+              )
+            : ""
+        }
+        bookingLink={bookingLink}
+      />
     </div>
   )
 }
