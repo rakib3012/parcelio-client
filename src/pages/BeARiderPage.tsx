@@ -214,51 +214,51 @@ const BeARiderPage = () => {
 
   return (
     <div className="w-full py-6 sm:py-10">
-      <div className="bg-white rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 shadow-xs max-w-6xl mx-auto">
+      <div className="bg-white dark:bg-[#151a23] rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 dark:border-white/10 shadow-xs max-w-6xl mx-auto transition-colors">
         {/* Header Section */}
         <header className="space-y-2">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-teal-950 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-teal-950 dark:text-white tracking-tight">
             Be a Rider
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-500 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-2xl leading-relaxed">
             Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From
             personal packages to business shipments — we deliver on time, every time.
           </p>
         </header>
 
         {/* Subheader with Divider */}
-        <div className="mt-8 pb-3 border-b border-neutral-200">
-          <h2 className="text-lg sm:text-xl font-bold text-teal-950">
+        <div className="mt-8 pb-3 border-b border-neutral-200 dark:border-white/10">
+          <h2 className="text-lg sm:text-xl font-bold text-teal-950 dark:text-white">
             Tell us about yourself
           </h2>
         </div>
 
         {/* API Error Banner */}
         {apiError && !isSuccessSubmitted && (
-          <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700">{apiError.message}</p>
+          <div className="mt-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-2xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700 dark:text-red-300">{apiError.message}</p>
           </div>
         )}
 
         {/* Success Banner */}
         {isSuccessSubmitted && submittedData && (
-          <div className="mt-6 p-5 bg-teal-50 border border-teal-200 rounded-2xl flex items-start gap-3.5 animate-in fade-in slide-in-from-top-2">
-            <CheckCircle2 className="w-5 h-5 text-teal-700 shrink-0 mt-0.5" />
+          <div className="mt-6 p-5 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/60 rounded-2xl flex items-start gap-3.5 animate-in fade-in slide-in-from-top-2">
+            <CheckCircle2 className="w-5 h-5 text-teal-700 dark:text-lime-400 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-teal-950">
+              <h3 className="text-sm font-semibold text-teal-950 dark:text-white">
                 Application Submitted Successfully!
               </h3>
-              <p className="text-xs text-teal-800 leading-relaxed">
-                Thank you, <span className="font-semibold">{submittedData.name}</span>. We have received your rider application for{" "}
-                <span className="font-semibold">{submittedData.district}, {submittedData.region}</span>. Our recruitment coordinator will verify your NID and Driving License and contact you via phone (<span className="font-semibold">{submittedData.phone}</span>) within 24 hours.
+              <p className="text-xs text-teal-800 dark:text-neutral-300 leading-relaxed">
+                Thank you, <span className="font-semibold text-teal-950 dark:text-lime-400">{submittedData.name}</span>. We have received your rider application for{" "}
+                <span className="font-semibold text-teal-950 dark:text-white">{submittedData.district}, {submittedData.region}</span>. Our recruitment coordinator will verify your NID and Driving License and contact you via phone (<span className="font-semibold text-teal-950 dark:text-white">{submittedData.phone}</span>) within 24 hours.
               </p>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={() => setIsSuccessSubmitted(false)}
-                className="mt-2 text-xs"
+                className="mt-2 text-xs border-teal-300 dark:border-white/20 text-teal-950 dark:text-white hover:bg-teal-100/50 dark:hover:bg-white/10"
               >
                 Submit another application
               </Button>
@@ -277,17 +277,20 @@ const BeARiderPage = () => {
             >
               {/* 1. Your Name */}
               <div className="space-y-1.5">
-                <Label htmlFor="name">Your Name</Label>
+                <Label htmlFor="name" className="text-teal-950 dark:text-neutral-200">Your Name</Label>
                 <Input
                   id="name"
                   type="text"
                   placeholder="Your Name"
                   {...register("name")}
                   aria-invalid={errors.name ? "true" : "false"}
-                  className={errors.name ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.name ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.name && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.name.message}</span>
                   </p>
@@ -296,17 +299,20 @@ const BeARiderPage = () => {
 
               {/* 2. Driving License Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="drivingLicense">Driving License Number</Label>
+                <Label htmlFor="drivingLicense" className="text-teal-950 dark:text-neutral-200">Driving License Number</Label>
                 <Input
                   id="drivingLicense"
                   type="text"
                   placeholder="Driving License Number"
                   {...register("drivingLicense")}
                   aria-invalid={errors.drivingLicense ? "true" : "false"}
-                  className={errors.drivingLicense ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.drivingLicense ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.drivingLicense && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.drivingLicense.message}</span>
                   </p>
@@ -315,17 +321,20 @@ const BeARiderPage = () => {
 
               {/* 3. Your Email */}
               <div className="space-y-1.5">
-                <Label htmlFor="email">Your Email</Label>
+                <Label htmlFor="email" className="text-teal-950 dark:text-neutral-200">Your Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="Your Email"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
-                  className={errors.email ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.email ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.email.message}</span>
                   </p>
@@ -334,7 +343,7 @@ const BeARiderPage = () => {
 
               {/* 4. Your Region */}
               <div className="space-y-1.5">
-                <Label htmlFor="region">Your Region</Label>
+                <Label htmlFor="region" className="text-teal-950 dark:text-neutral-200">Your Region</Label>
                 <Controller
                   name="region"
                   control={control}
@@ -349,7 +358,7 @@ const BeARiderPage = () => {
                       <SelectTrigger
                         id="region"
                         className={cn(
-                          "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                          "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
                           errors.region && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                         )}
                         aria-invalid={errors.region ? "true" : "false"}
@@ -370,7 +379,7 @@ const BeARiderPage = () => {
                   )}
                 />
                 {errors.region && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.region.message}</span>
                   </p>
@@ -379,7 +388,7 @@ const BeARiderPage = () => {
 
               {/* 5. Your District */}
               <div className="space-y-1.5">
-                <Label htmlFor="district">Your District</Label>
+                <Label htmlFor="district" className="text-teal-950 dark:text-neutral-200">Your District</Label>
                 <Controller
                   name="district"
                   control={control}
@@ -393,7 +402,7 @@ const BeARiderPage = () => {
                       <SelectTrigger
                         id="district"
                         className={cn(
-                          "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                          "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
                           errors.district && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                         )}
                         aria-invalid={errors.district ? "true" : "false"}
@@ -418,7 +427,7 @@ const BeARiderPage = () => {
                   )}
                 />
                 {errors.district && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.district.message}</span>
                   </p>
@@ -427,17 +436,20 @@ const BeARiderPage = () => {
 
               {/* 6. NID No */}
               <div className="space-y-1.5">
-                <Label htmlFor="nid">NID No</Label>
+                <Label htmlFor="nid" className="text-teal-950 dark:text-neutral-200">NID No</Label>
                 <Input
                   id="nid"
                   type="text"
                   placeholder="NID"
                   {...register("nid")}
                   aria-invalid={errors.nid ? "true" : "false"}
-                  className={errors.nid ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.nid ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.nid && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.nid.message}</span>
                   </p>
@@ -446,17 +458,20 @@ const BeARiderPage = () => {
 
               {/* 7. Phone Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone" className="text-teal-950 dark:text-neutral-200">Phone Number</Label>
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="Phone Number"
                   {...register("phone")}
                   aria-invalid={errors.phone ? "true" : "false"}
-                  className={errors.phone ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.phone ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.phone && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.phone.message}</span>
                   </p>
@@ -465,17 +480,20 @@ const BeARiderPage = () => {
 
               {/* 8. Bike Brand Model and Year */}
               <div className="space-y-1.5">
-                <Label htmlFor="bikeBrandModelYear">Bike Brand Model and Year</Label>
+                <Label htmlFor="bikeBrandModelYear" className="text-teal-950 dark:text-neutral-200">Bike Brand Model and Year</Label>
                 <Input
                   id="bikeBrandModelYear"
                   type="text"
                   placeholder="Bike Brand Model and Year"
                   {...register("bikeBrandModelYear")}
                   aria-invalid={errors.bikeBrandModelYear ? "true" : "false"}
-                  className={errors.bikeBrandModelYear ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.bikeBrandModelYear ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.bikeBrandModelYear && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.bikeBrandModelYear.message}</span>
                   </p>
@@ -484,17 +502,20 @@ const BeARiderPage = () => {
 
               {/* 9. Bike Registration Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="bikeRegistrationNumber">Bike Registration Number</Label>
+                <Label htmlFor="bikeRegistrationNumber" className="text-teal-950 dark:text-neutral-200">Bike Registration Number</Label>
                 <Input
                   id="bikeRegistrationNumber"
                   type="text"
                   placeholder="Bike Registration Number"
                   {...register("bikeRegistrationNumber")}
                   aria-invalid={errors.bikeRegistrationNumber ? "true" : "false"}
-                  className={errors.bikeRegistrationNumber ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.bikeRegistrationNumber ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.bikeRegistrationNumber && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.bikeRegistrationNumber.message}</span>
                   </p>
@@ -503,17 +524,20 @@ const BeARiderPage = () => {
 
               {/* 10. Tell Us About Yourself */}
               <div className="space-y-1.5">
-                <Label htmlFor="aboutYourself">Tell Us About Yourself</Label>
+                <Label htmlFor="aboutYourself" className="text-teal-950 dark:text-neutral-200">Tell Us About Yourself</Label>
                 <Input
                   id="aboutYourself"
                   type="text"
                   placeholder="Tell Us About Yourself"
                   {...register("aboutYourself")}
                   aria-invalid={errors.aboutYourself ? "true" : "false"}
-                  className={errors.aboutYourself ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""}
+                  className={cn(
+                    "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
+                    errors.aboutYourself ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                  )}
                 />
                 {errors.aboutYourself && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.aboutYourself.message}</span>
                   </p>

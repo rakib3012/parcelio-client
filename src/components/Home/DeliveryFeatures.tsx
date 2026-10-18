@@ -31,12 +31,12 @@ const deliveryFeatures: DeliveryFeature[] = [
 
 const DeliveryFeatures = () => {
   return (
-    <section className="py-8 sm:py-12 border-y border-dashed border-teal-900/20 my-6">
+    <section className="py-8 sm:py-12 border-y border-dashed border-teal-900/20 dark:border-white/10 my-6">
       <div className="space-y-6">
         {deliveryFeatures.map((feature) => (
           <div
             key={feature.id}
-            className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-100 shadow-xs flex flex-col md:flex-row items-center gap-6 sm:gap-10 hover:shadow-md transition-all duration-300"
+            className="bg-white dark:bg-[#151a23] rounded-3xl p-6 sm:p-8 border border-neutral-100 dark:border-white/10 shadow-xs flex flex-col md:flex-row items-center gap-6 sm:gap-10 hover:shadow-md transition-all duration-300"
           >
             {/* Left: Illustration Image */}
             <div className="w-full md:w-56 lg:w-64 flex items-center justify-center shrink-0">
@@ -49,16 +49,16 @@ const DeliveryFeatures = () => {
 
             {/* Vertical Dashed Divider (Desktop) */}
             <div
-              className="hidden md:block w-px self-stretch border-r border-dashed border-teal-900/20"
+              className="hidden md:block w-px self-stretch border-r border-dashed border-teal-900/20 dark:border-white/10"
               aria-hidden="true"
             />
 
             {/* Right: Content */}
             <div className="flex-1 text-center md:text-left space-y-2">
-              <h3 className="text-xl sm:text-2xl font-bold text-[#03332D]">
+              <h3 className="text-xl sm:text-2xl font-bold text-[#03332D] dark:text-white">
                 {feature.title}
               </h3>
-              <p className="text-sm text-neutral-600 leading-relaxed max-w-2xl">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl">
                 {feature.description}
               </p>
             </div>

@@ -39,7 +39,7 @@ const workSteps: WorkStep[] = [
 const HowItWorks = () => {
   return (
     <section className="space-y-6">
-      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#03332D] tracking-tight">
+      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#03332D] dark:text-white tracking-tight">
         How it Works
       </h2>
 
@@ -47,21 +47,21 @@ const HowItWorks = () => {
         {workSteps.map((step) => (
           <div
             key={step.id}
-            className="bg-white rounded-2xl p-6 sm:p-7 border border-neutral-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
+            className="bg-white dark:bg-[#151a23] rounded-2xl p-6 sm:p-7 border border-neutral-200/80 dark:border-white/10 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
           >
-            <div className="mb-4">
+            <div className="mb-4 w-12 h-12 rounded-xl bg-neutral-100 dark:bg-white/5 flex items-center justify-center p-2.5">
               <img
                 src={step.icon}
                 alt={step.title}
-                className="w-10 h-10 object-contain"
+                className="w-full h-full object-contain"
               />
             </div>
 
-            <h3 className="text-base font-bold text-[#03332D] mb-2 leading-snug">
+            <h3 className="text-base font-bold text-[#03332D] dark:text-white mb-2 leading-snug">
               {step.title}
             </h3>
 
-            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
               {step.description}
             </p>
           </div>

@@ -52,10 +52,10 @@ const FaqSection = () => {
       <div className="max-w-4xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-3">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#03332D] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#03332D] dark:text-white tracking-tight">
             Frequently Asked Question (FAQ)
           </h2>
-          <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             Enhance posture, mobility, and well-being effortlessly with Posture Pro. Achieve proper alignment, reduce pain, and strengthen your body with ease!
           </p>
         </div>
@@ -69,14 +69,14 @@ const FaqSection = () => {
             <AccordionItem
               key={faq.id}
               value={`faq-${faq.id}`}
-              className="rounded-2xl border border-neutral-100 bg-white shadow-xs data-[panel-open]:border-[#288E89] data-[panel-open]:bg-[#EBF7F5] transition-all overflow-hidden"
+              className="rounded-2xl border border-neutral-100 dark:border-white/10 bg-white dark:bg-[#151a23] shadow-xs data-[panel-open]:border-[#288E89] dark:data-[panel-open]:border-[#288E89]/60 data-[panel-open]:bg-[#EBF7F5] dark:data-[panel-open]:bg-[#132825] transition-all overflow-hidden"
             >
-              <AccordionTrigger className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer text-sm sm:text-base font-bold text-neutral-900 data-[panel-open]:text-[#03332D] [&>svg]:text-neutral-700 data-[panel-open]:[&>svg]:text-[#288E89]">
+              <AccordionTrigger className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer text-sm sm:text-base font-bold text-neutral-900 dark:text-white data-[panel-open]:text-[#03332D] dark:data-[panel-open]:text-[#CAEA3C] [&>svg]:text-neutral-700 dark:[&>svg]:text-neutral-300 data-[panel-open]:[&>svg]:text-[#288E89] dark:data-[panel-open]:[&>svg]:text-[#CAEA3C]">
                 {faq.question}
               </AccordionTrigger>
               <AccordionContent className="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
-                <div className="border-t border-[#288E89]/20 pt-3">
-                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
+                <div className="border-t border-[#288E89]/20 dark:border-white/10 pt-3">
+                  <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed font-normal">
                     {faq.answer}
                   </p>
                 </div>
@@ -96,7 +96,7 @@ const FaqSection = () => {
           <Link
             to="/about"
             aria-label="See More FAQ's"
-            className="w-10 h-10 rounded-full bg-[#111827] hover:bg-black text-white flex items-center justify-center transition-transform hover:scale-105 shadow-xs"
+            className="w-10 h-10 rounded-full bg-[#111827] dark:bg-white text-white dark:text-neutral-950 hover:bg-black dark:hover:bg-neutral-200 flex items-center justify-center transition-transform hover:scale-105 shadow-xs"
           >
             <ArrowUpRight className="w-4 h-4" />
           </Link>

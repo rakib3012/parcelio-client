@@ -17,7 +17,7 @@ const BrandPartners = () => {
     <section className="py-6 sm:py-10 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 text-center">
         {/* Title */}
-        <h3 className="text-sm sm:text-base font-bold text-[#03332D] tracking-tight mb-8">
+        <h3 className="text-sm sm:text-base font-bold text-[#03332D] dark:text-neutral-300 tracking-tight mb-8">
           We've helped thousands of sales teams
         </h3>
 
@@ -34,7 +34,7 @@ const BrandPartners = () => {
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="h-6 sm:h-7 md:h-8 w-auto object-contain"
+                    className="h-6 sm:h-7 md:h-8 w-auto object-contain dark:brightness-0 dark:invert dark:opacity-75 hover:dark:opacity-100 transition-all"
                   />
                 </div>
               ))}
@@ -50,7 +50,7 @@ const BrandPartners = () => {
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="h-6 sm:h-7 md:h-8 w-auto object-contain"
+                    className="h-6 sm:h-7 md:h-8 w-auto object-contain dark:brightness-0 dark:invert dark:opacity-75 hover:dark:opacity-100 transition-all"
                   />
                 </div>
               ))}

@@ -10,7 +10,149 @@ import {
   ArrowRight,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from "@/components/ui/chart"
+import {
+  Area,
+  AreaChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Pie,
+  PieChart,
+  Cell,
+} from "recharts"
 
+// ── Chart Data ──────────────────────────────────────────────────
+const weeklyData = [
+  { day: "Mon", deliveries: 8, earnings: 1120 },
+  { day: "Tue", deliveries: 12, earnings: 1680 },
+  { day: "Wed", deliveries: 6, earnings: 840 },
+  { day: "Thu", deliveries: 15, earnings: 2100 },
+  { day: "Fri", deliveries: 10, earnings: 1400 },
+  { day: "Sat", deliveries: 18, earnings: 2520 },
+  { day: "Sun", deliveries: 4, earnings: 560 },
+]
+
+const weeklyChartConfig = {
+  deliveries: {
+    label: "Deliveries",
+    color: "#CAEA3C",
+  },
+  earnings: {
+    label: "Earnings (৳)",
+    color: "#a855f7",
+  },
+} satisfies ChartConfig
+
+const performanceData = [
+  { name: "Delivered", value: 12 },
+  { name: "In Transit", value: 2 },
+  { name: "Assigned", value: 1 },
+]
+const PERF_COLORS = ["#22c55e", "#f59e0b", "#3b82f6"]
+
+const perfConfig = {
+  delivered: { label: "Delivered", color: "#22c55e" },
+  inTransit: { label: "In Transit", color: "#f59e0b" },
+  assigned: { label: "Assigned", color: "#3b82f6" },
+} satisfies ChartConfig
+
+// ── Sparkline ───────────────────────────────────────────────────
+function MiniSparkline({
+  color,
+  variant = "wave",
+}: {
+  color: string
+  variant?: "wave" | "flat" | "up"
+}) {
+  const paths: Record<string, string> = {
+    wave: "M0,20 Q10,5 20,15 Q30,25 40,10 Q50,0 60,12 Q70,22 80,8",
+    flat: "M0,15 L20,15 L40,15 L60,15 L80,15",
+    up: "M0,20 Q20,18 40,12 Q60,6 80,2",
+  }
+
+  return (
+    <svg
+      viewBox="0 0 80 25"
+      className="w-16 h-6 opacity-60"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d={paths[variant]} />
+    </svg>
+  )
+}
+
+// ── Stats Card ──────────────────────────────────────────────────
+interface DarkStatsCardProps {
+  label: string
+  value: string | number
+  icon: React.ComponentType<{ className?: string }>
+  iconColor: string
+  sparkColor: string
+  sparkVariant?: "wave" | "flat" | "up"
+  subtitle?: string
+  subtitleColor?: string
+}
+
+function DarkStatsCard({
+  label,
+  value,
+  icon: Icon,
+  iconColor,
+  sparkColor,
+  sparkVariant = "wave",
+  subtitle,
+  subtitleColor = "text-white/40",
+}: DarkStatsCardProps) {
+  return (
+    <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 group">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <span className="text-[11px] font-bold text-white/60 uppercase tracking-widest">
+            {label}
+          </span>
+          <div
+            className={`w-8 h-8 rounded-lg ${iconColor} flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity`}
+          >
+            <Icon className="w-4 h-4 text-white" />
+          </div>
+        </div>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-3xl font-extrabold text-white tracking-tight">
+              {value}
+            </p>
+            {subtitle && (
+              <p className={`text-[11px] ${subtitleColor} mt-1 font-medium`}>
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <MiniSparkline color={sparkColor} variant={sparkVariant} />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// ── Task Interface ──────────────────────────────────────────────
 interface TaskItem {
   id: string
   trackingCode: string
@@ -70,18 +212,18 @@ const RiderDashboardPage = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-[#1a1f2e]/80 rounded-2xl p-6 sm:p-8 border border-white/10 backdrop-blur-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 text-xs font-semibold text-neutral-800 mb-2 border border-neutral-200">
-            <span className="w-2 h-2 rounded-full bg-[#CAEA3C]"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 text-xs font-semibold text-white/70 mb-2 border border-white/10">
+            <span className="w-2 h-2 rounded-full bg-[#CAEA3C] animate-pulse"></span>
             Active Shift &bull; Fleet Rider
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             Welcome back, {currentUser?.fullName || "Courier Rider"}! 🚴
           </h1>
-          <p className="text-sm text-neutral-600 mt-1 max-w-xl">
+          <p className="text-sm text-white/50 mt-1 max-w-xl">
             You have active deliveries queued for today. Update statuses promptly
             to ensure on-time delivery metrics.
           </p>
@@ -89,7 +231,7 @@ const RiderDashboardPage = () => {
 
         <Link
           to="/rider/deliveries"
-          className="inline-flex items-center gap-2 bg-[#1C1D20] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-neutral-800 transition-colors shadow-xs flex-shrink-0"
+          className="inline-flex items-center gap-2 bg-[#CAEA3C] text-neutral-900 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#d4f050] transition-colors shadow-lg shadow-[#CAEA3C]/20 flex-shrink-0"
         >
           <span>View All Tasks</span>
           <ArrowRight className="w-4 h-4" />
@@ -97,122 +239,253 @@ const RiderDashboardPage = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Assigned Tasks
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
-              <Package className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">
-            {tasks.filter((t) => t.status !== "Delivered").length}
-          </p>
-          <p className="text-xs text-neutral-500 mt-1">Pending for today</p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <DarkStatsCard
+          label="Assigned Tasks"
+          value={tasks.filter((t) => t.status !== "Delivered").length}
+          icon={Package}
+          iconColor="bg-blue-500/30"
+          sparkColor="#60a5fa"
+          sparkVariant="wave"
+          subtitle="Pending for today"
+        />
+        <DarkStatsCard
+          label="Delivered Today"
+          value={12}
+          icon={CheckCircle2}
+          iconColor="bg-emerald-500/30"
+          sparkColor="#34d399"
+          sparkVariant="up"
+          subtitle="+3 more than yesterday"
+          subtitleColor="text-emerald-400"
+        />
+        <DarkStatsCard
+          label="Today's Earnings"
+          value="৳1,480"
+          icon={TrendingUp}
+          iconColor="bg-[#CAEA3C]/30"
+          sparkColor="#CAEA3C"
+          sparkVariant="up"
+          subtitle="Incl. express trip bonuses"
+        />
+        <DarkStatsCard
+          label="Service Rating"
+          value="4.95 ★"
+          icon={Bike}
+          iconColor="bg-amber-500/30"
+          sparkColor="#f59e0b"
+          sparkVariant="wave"
+          subtitle="From 180+ verified reviews"
+        />
+      </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Delivered Today
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">12</p>
-          <p className="text-xs text-emerald-600 mt-1 font-medium">
-            +3 more than yesterday
-          </p>
-        </div>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Weekly Performance Area Chart */}
+        <Card className="lg:col-span-2 bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-base font-semibold">
+              Weekly Performance
+            </CardTitle>
+            <CardDescription className="text-white/40 text-xs">
+              Deliveries and earnings over the past week
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={weeklyChartConfig}
+              className="aspect-auto h-[260px] w-full"
+            >
+              <AreaChart
+                data={weeklyData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="fillRiderDel" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#CAEA3C" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#CAEA3C" stopOpacity={0.02} />
+                  </linearGradient>
+                  <linearGradient id="fillRiderEarn" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.06)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="day"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      indicator="dot"
+                      className="bg-[#1a1f2e] border-white/10 text-white"
+                    />
+                  }
+                />
+                <ChartLegend
+                  content={<ChartLegendContent className="text-white/60" />}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="deliveries"
+                  stroke="#CAEA3C"
+                  strokeWidth={2.5}
+                  fill="url(#fillRiderDel)"
+                  dot={false}
+                  activeDot={{
+                    r: 5,
+                    fill: "#CAEA3C",
+                    stroke: "#0f1419",
+                    strokeWidth: 2,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="earnings"
+                  stroke="#a855f7"
+                  strokeWidth={2.5}
+                  fill="url(#fillRiderEarn)"
+                  dot={false}
+                  activeDot={{
+                    r: 5,
+                    fill: "#a855f7",
+                    stroke: "#0f1419",
+                    strokeWidth: 2,
+                  }}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Today's Earnings
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-[#CAEA3C]/30 text-[#3d5a00] flex items-center justify-center">
-              <TrendingUp className="w-4 h-4" />
+        {/* Today's Performance Donut */}
+        <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-base font-semibold">
+              Today's Status
+            </CardTitle>
+            <CardDescription className="text-white/40 text-xs">
+              Current delivery task breakdown
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center">
+            <ChartContainer
+              config={perfConfig}
+              className="aspect-square h-[200px] w-full"
+            >
+              <PieChart>
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent className="bg-[#1a1f2e] border-white/10 text-white" />
+                  }
+                />
+                <Pie
+                  data={performanceData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={78}
+                  paddingAngle={4}
+                  dataKey="value"
+                  nameKey="name"
+                  strokeWidth={0}
+                >
+                  {performanceData.map((_entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={PERF_COLORS[index % PERF_COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+            <div className="flex items-center gap-4 mt-2">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                <span className="text-xs text-white/60 font-medium">Delivered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-amber-500" />
+                <span className="text-xs text-white/60 font-medium">In Transit</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-blue-500" />
+                <span className="text-xs text-white/60 font-medium">Assigned</span>
+              </div>
             </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">৳ 1,480</p>
-          <p className="text-xs text-neutral-500 mt-1">
-            Incl. express trip bonuses
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Service Rating
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
-              <Bike className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">4.95 ★</p>
-          <p className="text-xs text-neutral-500 mt-1">From 180+ verified reviews</p>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Active Deliveries List */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/80 shadow-xs space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-neutral-100 pb-4">
-          <div>
-            <h2 className="text-lg font-bold text-neutral-900 tracking-tight">
-              Active Delivery Queue
-            </h2>
-            <p className="text-xs text-neutral-500">
-              Orders requiring immediate attention and parcel handover
-            </p>
+      <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm">
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <CardTitle className="text-white text-lg font-bold tracking-tight">
+                Active Delivery Queue
+              </CardTitle>
+              <CardDescription className="text-white/40 text-xs">
+                Orders requiring immediate attention and parcel handover
+              </CardDescription>
+            </div>
+            <span className="text-xs font-medium text-white/40 bg-white/5 px-3 py-1 rounded-full border border-white/10 self-start sm:self-auto">
+              {tasks.length} shipments loaded
+            </span>
           </div>
-          <span className="text-xs font-medium text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full self-start sm:self-auto">
-            {tasks.length} shipments loaded
-          </span>
-        </div>
-
-        <div className="space-y-4">
+        </CardHeader>
+        <CardContent className="space-y-4">
           {tasks.map((task) => (
             <div
               key={task.id}
-              className="p-5 rounded-2xl border border-neutral-200/80 hover:border-neutral-300 transition-colors bg-neutral-50/50 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+              className="p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors bg-white/[0.02] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
             >
               <div className="space-y-2 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-neutral-900 bg-white px-2.5 py-1 rounded-lg border border-neutral-200">
+                  <span className="font-mono text-xs font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                     {task.trackingCode}
                   </span>
                   <span
                     className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                       task.status === "Delivered"
-                        ? "bg-emerald-100 text-emerald-800"
+                        ? "bg-emerald-500/20 text-emerald-400"
                         : task.status === "In Transit"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-blue-100 text-blue-800"
+                        ? "bg-amber-500/20 text-amber-400"
+                        : "bg-blue-500/20 text-blue-400"
                     }`}
                   >
                     {task.status}
                   </span>
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-neutral-200/70 text-neutral-700">
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-white/50">
                     {task.priority}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-neutral-500">Recipient: </span>
-                    <span className="font-semibold text-neutral-900">
+                    <span className="text-white/40">Recipient: </span>
+                    <span className="font-semibold text-white">
                       {task.recipientName}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-neutral-600">
-                    <Phone className="w-3.5 h-3.5 text-neutral-400" />
+                  <div className="flex items-center gap-1.5 text-white/60">
+                    <Phone className="w-3.5 h-3.5 text-white/30" />
                     <span>{task.recipientPhone}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-neutral-600 sm:col-span-2">
-                    <MapPin className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                  <div className="flex items-center gap-1.5 text-white/60 sm:col-span-2">
+                    <MapPin className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
                     <span>
                       {task.destinationAddress} ({task.area})
                     </span>
@@ -221,12 +494,12 @@ const RiderDashboardPage = () => {
               </div>
 
               {/* COD & Actions */}
-              <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-neutral-200">
+              <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-white/5">
                 <div className="text-left lg:text-right">
-                  <span className="text-[10px] uppercase font-bold text-neutral-400 block">
+                  <span className="text-[10px] uppercase font-bold text-white/30 block">
                     COD to Collect
                   </span>
-                  <span className="text-base font-extrabold text-neutral-900 font-mono">
+                  <span className="text-base font-extrabold text-white font-mono">
                     ৳ {task.codAmount}
                   </span>
                 </div>
@@ -236,7 +509,7 @@ const RiderDashboardPage = () => {
                     <button
                       type="button"
                       onClick={() => handleUpdateStatus(task.id, "In Transit")}
-                      className="px-3.5 py-2 text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl transition-colors shadow-xs"
+                      className="px-3.5 py-2 text-xs font-semibold bg-white/10 text-white hover:bg-white/15 rounded-xl transition-colors border border-white/10"
                     >
                       Start Trip
                     </button>
@@ -245,14 +518,14 @@ const RiderDashboardPage = () => {
                     <button
                       type="button"
                       onClick={() => handleUpdateStatus(task.id, "Delivered")}
-                      className="px-3.5 py-2 text-xs font-semibold bg-[#CAEA3C] text-neutral-900 hover:bg-[#b8d82d] rounded-xl transition-colors shadow-xs flex items-center gap-1.5"
+                      className="px-3.5 py-2 text-xs font-semibold bg-[#CAEA3C] text-neutral-900 hover:bg-[#d4f050] rounded-xl transition-colors shadow-sm flex items-center gap-1.5"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Delivered</span>
                     </button>
                   )}
                   {task.status === "Delivered" && (
-                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1">
+                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 px-3 py-1.5 rounded-xl border border-emerald-500/20 flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Completed
                     </span>
@@ -261,8 +534,8 @@ const RiderDashboardPage = () => {
               </div>
             </div>
           ))}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

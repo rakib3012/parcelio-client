@@ -32,15 +32,15 @@ export function BookingDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 backdrop-blur-xs"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative bg-white dark:bg-[#151a23] border border-neutral-100 dark:border-white/10 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200 transition-colors">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 sticky top-0 bg-white rounded-t-3xl z-10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100 dark:border-white/10 sticky top-0 bg-white dark:bg-[#151a23] rounded-t-3xl z-10">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-bold text-neutral-900">
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
                 {booking.trackingId}
               </h2>
               <StatusBadge status={booking.status} />
@@ -52,7 +52,7 @@ export function BookingDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-xl transition-colors cursor-pointer"
+            className="p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-white/10 rounded-xl transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -114,11 +114,11 @@ export function BookingDetailModal({
               />
             </div>
             {booking.pickupInstruction && (
-              <div className="mt-3 p-3 rounded-xl bg-neutral-50 border border-neutral-100">
-                <p className="text-xs font-semibold text-neutral-500 mb-1">
+              <div className="mt-3 p-3 rounded-xl bg-neutral-50 dark:bg-[#10141d] border border-neutral-100 dark:border-white/10">
+                <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-1">
                   Pickup Instruction
                 </p>
-                <p className="text-sm text-neutral-700">
+                <p className="text-sm text-neutral-700 dark:text-neutral-200">
                   {booking.pickupInstruction}
                 </p>
               </div>
@@ -150,11 +150,11 @@ export function BookingDetailModal({
               />
             </div>
             {booking.deliveryInstruction && (
-              <div className="mt-3 p-3 rounded-xl bg-neutral-50 border border-neutral-100">
-                <p className="text-xs font-semibold text-neutral-500 mb-1">
+              <div className="mt-3 p-3 rounded-xl bg-neutral-50 dark:bg-[#10141d] border border-neutral-100 dark:border-white/10">
+                <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-1">
                   Delivery Instruction
                 </p>
-                <p className="text-sm text-neutral-700">
+                <p className="text-sm text-neutral-700 dark:text-neutral-200">
                   {booking.deliveryInstruction}
                 </p>
               </div>
@@ -208,7 +208,7 @@ export function BookingDetailModal({
                           </span>
                         </div>
                         {entry.note && (
-                          <p className="text-xs text-neutral-500 mt-0.5">
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
                             {entry.note}
                           </p>
                         )}
@@ -239,7 +239,7 @@ export function BookingDetailModal({
           <button
             type="button"
             onClick={onUpdateStatus}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1C1D20] text-white text-sm font-semibold hover:bg-neutral-800 transition-colors cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1C1D20] dark:bg-lime-400 text-white dark:text-neutral-900 text-sm font-semibold hover:bg-neutral-800 dark:hover:bg-lime-500 transition-colors cursor-pointer shadow-xs"
           >
             <ArrowUpDown className="w-4 h-4" />
             Update Status

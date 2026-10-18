@@ -79,11 +79,11 @@ const CustomerReview = () => {
           />
         </div>
 
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#03332D] tracking-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#03332D] dark:text-white tracking-tight">
           What our customers are sayings
         </h2>
 
-        <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-xl mx-auto">
+        <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl mx-auto">
           Enhance posture, mobility, and well-being effortlessly with Posture Pro. Achieve proper alignment, reduce pain, and strengthen your body with ease!
         </p>
       </div>
@@ -121,23 +121,23 @@ const CustomerReview = () => {
         >
           {reviews.map((item) => (
             <SwiperSlide key={item.id} className="w-72! sm:w-80! md:w-96!">
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-100 shadow-xs flex flex-col justify-between h-full">
+              <div className="bg-white dark:bg-[#151a23] rounded-3xl p-6 sm:p-8 border border-neutral-100 dark:border-white/10 shadow-xs flex flex-col justify-between h-full transition-colors">
                 {/* Quote Icon */}
                 <div className="mb-4">
                   <img
                     src="/assets/reviewQuote.png"
                     alt="Quote"
-                    className="w-8 h-8 object-contain"
+                    className="w-8 h-8 object-contain dark:opacity-80"
                   />
                 </div>
 
                 {/* Review Text */}
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed mb-6 font-normal">
+                <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-6 font-normal">
                   {item.review}
                 </p>
 
                 {/* Dashed Line */}
-                <div className="w-full border-t border-dashed border-teal-900/20 my-4" />
+                <div className="w-full border-t border-dashed border-teal-900/20 dark:border-white/10 my-4" />
 
                 {/* Author Info */}
                 <div className="flex items-center gap-3 pt-1">
@@ -147,10 +147,10 @@ const CustomerReview = () => {
                     {item.name.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#03332D] leading-tight mb-0.5">
+                    <h4 className="text-sm font-bold text-[#03332D] dark:text-white leading-tight mb-0.5">
                       {item.name}
                     </h4>
-                    <p className="text-xs text-neutral-500 leading-tight">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-tight">
                       {item.role}
                     </p>
                   </div>
@@ -167,7 +167,7 @@ const CustomerReview = () => {
             id="review-prev-btn"
             type="button"
             aria-label="Previous Review"
-            className="w-10 h-10 rounded-full bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-800 flex items-center justify-center shadow-xs cursor-pointer transition-colors"
+            className="w-10 h-10 rounded-full bg-white dark:bg-[#151a23] hover:bg-neutral-50 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-white flex items-center justify-center shadow-xs cursor-pointer transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>

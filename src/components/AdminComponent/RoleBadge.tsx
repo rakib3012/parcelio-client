@@ -15,18 +15,18 @@ export function RoleBadge({ role }: RoleBadgeProps) {
     }
   > = {
     user: {
-      bg: "bg-blue-50 border-blue-100",
-      text: "text-blue-700",
+      bg: "bg-blue-50 dark:bg-blue-950/40 border-blue-100 dark:border-blue-900/50",
+      text: "text-blue-700 dark:text-blue-400",
       icon: UserCheck,
     },
     rider: {
-      bg: "bg-amber-50 border-amber-100",
-      text: "text-amber-700",
+      bg: "bg-amber-50 dark:bg-amber-950/40 border-amber-100 dark:border-amber-900/50",
+      text: "text-amber-700 dark:text-amber-400",
       icon: Bike,
     },
     admin: {
-      bg: "bg-purple-50 border-purple-100",
-      text: "text-purple-700",
+      bg: "bg-purple-50 dark:bg-purple-950/40 border-purple-100 dark:border-purple-900/50",
+      text: "text-purple-700 dark:text-purple-400",
       icon: ShieldCheck,
     },
   };

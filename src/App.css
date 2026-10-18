@@ -59,3 +59,13 @@ body {
   width: 0.625rem;
   height: 0.625rem;
 }
+
+.dark .review-pagination .swiper-pagination-bullet {
+  background-color: #4b6b66;
+  opacity: 0.6;
+}
+
+.dark .review-pagination .swiper-pagination-bullet-active {
+  background-color: #caea3c;
+  opacity: 1;
+}

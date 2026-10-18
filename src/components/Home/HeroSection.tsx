@@ -89,7 +89,7 @@ const HeroSection = () => {
   }, [])
 
   return (
-    <section className="bg-white rounded-3xl p-8 sm:p-12 lg:p-14 border border-neutral-200/80 shadow-xs relative overflow-hidden">
+    <section className="bg-white dark:bg-[#151a23] rounded-3xl p-8 sm:p-12 lg:p-14 border border-neutral-200/80 dark:border-white/10 shadow-xs relative overflow-hidden transition-colors">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         {/* Left Column: Content */}
         <div className="lg:col-span-7 flex flex-col justify-center space-y-6">
@@ -103,9 +103,9 @@ const HeroSection = () => {
           </div>
 
           {/* Heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#03332D] leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#03332D] dark:text-white leading-tight">
             {currentSlide.titleLine1} <br className="hidden sm:inline" />
-            <span className="text-[#258a84]">{currentSlide.titleHighlight}</span>{" "}
+            <span className="text-[#258a84] dark:text-[#CAEA3C]">{currentSlide.titleHighlight}</span>{" "}
             {currentSlide.titleLine2}
             {currentSlide.titleLine3 && (
               <>
@@ -116,7 +116,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-base text-neutral-600 font-medium max-w-lg leading-relaxed">
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-medium max-w-lg leading-relaxed">
             {currentSlide.subtitle}
           </p>
 
@@ -133,7 +133,7 @@ const HeroSection = () => {
               <Link
                 to={currentSlide.primaryBtnLink}
                 aria-label={currentSlide.primaryBtnText}
-                className="w-11 h-11 rounded-full bg-[#111827] hover:bg-black text-white flex items-center justify-center transition-transform group-hover:scale-105 shadow-xs"
+                className="w-11 h-11 rounded-full bg-[#111827] hover:bg-black dark:bg-[#CAEA3C] dark:hover:bg-[#bddf2e] text-white dark:text-neutral-950 flex items-center justify-center transition-transform group-hover:scale-105 shadow-xs"
               >
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
@@ -142,7 +142,7 @@ const HeroSection = () => {
             {/* Secondary Action Button */}
             <Link
               to={currentSlide.secondaryBtnLink}
-              className="inline-flex items-center justify-center bg-white hover:bg-neutral-50 border border-neutral-300 text-neutral-900 font-bold px-6 py-3.5 rounded-2xl text-sm transition-colors shadow-xs"
+              className="inline-flex items-center justify-center bg-white hover:bg-neutral-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white font-bold px-6 py-3.5 rounded-2xl text-sm transition-colors shadow-xs"
             >
               {currentSlide.secondaryBtnText}
             </Link>
@@ -158,8 +158,8 @@ const HeroSection = () => {
                 aria-label={`Go to slide ${index + 1}`}
                 className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
                   activeSlideIndex === index
-                    ? "w-9 bg-[#03332D]"
-                    : "w-6 bg-[#D8E7E4] hover:bg-[#b8d6d1]"
+                    ? "w-9 bg-[#03332D] dark:bg-[#CAEA3C]"
+                    : "w-6 bg-[#D8E7E4] dark:bg-neutral-800 hover:bg-[#b8d6d1] dark:hover:bg-neutral-700"
                 }`}
               />
             ))}

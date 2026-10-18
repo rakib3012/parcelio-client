@@ -2,9 +2,18 @@ export const paymentStatusConfig: Record<
   string,
   { bg: string; text: string }
 > = {
-  pending: { bg: "bg-orange-50 border-orange-100", text: "text-orange-700" },
-  paid: { bg: "bg-emerald-50 border-emerald-100", text: "text-emerald-700" },
-  cancelled: { bg: "bg-red-50 border-red-100", text: "text-red-700" },
+  pending: {
+    bg: "bg-orange-50 dark:bg-orange-950/40 border-orange-100 dark:border-orange-900/50",
+    text: "text-orange-700 dark:text-orange-400",
+  },
+  paid: {
+    bg: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/50",
+    text: "text-emerald-700 dark:text-emerald-400",
+  },
+  cancelled: {
+    bg: "bg-red-50 dark:bg-red-950/40 border-red-100 dark:border-red-900/50",
+    text: "text-red-700 dark:text-red-400",
+  },
 };
 
 interface PaymentBadgeProps {

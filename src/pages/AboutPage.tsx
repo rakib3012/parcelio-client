@@ -53,19 +53,19 @@ const AboutPage = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto py-4 sm:py-8">
-      <div className="bg-white rounded-[32px] p-8 sm:p-14 lg:p-16 border border-neutral-200/70 shadow-xs">
+      <div className="bg-white dark:bg-[#151a23] rounded-[32px] p-8 sm:p-14 lg:p-16 border border-neutral-200/70 dark:border-white/10 shadow-xs transition-colors">
         {/* Header Section */}
         <div>
-          <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0B3337] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0B3337] dark:text-white tracking-tight">
             About Us
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-500 font-normal leading-relaxed mt-3 max-w-2xl">
+          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-relaxed mt-3 max-w-2xl">
             Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.
           </p>
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-neutral-200/80 my-8 sm:my-10" />
+        <div className="w-full h-px bg-neutral-200/80 dark:bg-white/10 my-8 sm:my-10" />
 
         {/* Navigation Tabs */}
         <div className="flex items-center flex-wrap gap-7 sm:gap-10 mb-8 sm:mb-10">
@@ -78,8 +78,8 @@ const AboutPage = () => {
                 onClick={() => setActiveTabId(tab.id)}
                 className={`text-lg sm:text-xl font-bold transition-colors cursor-pointer select-none ${
                   isActive
-                    ? "text-[#5e7724]"
-                    : "text-neutral-400 hover:text-neutral-600 font-semibold"
+                    ? "text-[#5e7724] dark:text-[#CAEA3C]"
+                    : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 font-semibold"
                 }`}
               >
                 {tab.label}
@@ -93,7 +93,7 @@ const AboutPage = () => {
           {currentTab.paragraphs.map((paragraph, index) => (
             <p
               key={index}
-              className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal"
+              className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed font-normal"
             >
               {paragraph}
             </p>

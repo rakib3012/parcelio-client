@@ -2,9 +2,9 @@ import { Link } from "react-router"
 
 const MerchantBanner = () => {
   return (
-    <section className="bg-[#03332D] rounded-3xl p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden shadow-xs">
+    <section className="bg-[#03332D] dark:bg-[#151a23] dark:border dark:border-white/10 rounded-3xl p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden shadow-xs transition-colors">
       {/* Decorative Top Wave Graphic */}
-      <div className="absolute top-0 left-0 right-0 w-full pointer-events-none opacity-85 select-none overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 w-full pointer-events-none opacity-85 dark:opacity-40 select-none overflow-hidden">
         <img
           src="/assets/be-a-merchant-bg.png"
           alt=""

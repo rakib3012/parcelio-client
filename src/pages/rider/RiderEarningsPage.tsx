@@ -1,4 +1,86 @@
 import { Wallet, ArrowDownRight, ArrowUpRight, CheckCircle2 } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+
+// ── Sparkline ───────────────────────────────────────────────────
+function MiniSparkline({
+  color,
+  variant = "wave",
+}: {
+  color: string
+  variant?: "wave" | "flat" | "up"
+}) {
+  const paths: Record<string, string> = {
+    wave: "M0,20 Q10,5 20,15 Q30,25 40,10 Q50,0 60,12 Q70,22 80,8",
+    flat: "M0,15 L20,15 L40,15 L60,15 L80,15",
+    up: "M0,20 Q20,18 40,12 Q60,6 80,2",
+  }
+
+  return (
+    <svg
+      viewBox="0 0 80 25"
+      className="w-16 h-6 opacity-60"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d={paths[variant]} />
+    </svg>
+  )
+}
+
+// ── Stats Card ──────────────────────────────────────────────────
+interface DarkStatsCardProps {
+  label: string
+  value: string | number
+  icon: React.ComponentType<{ className?: string }>
+  iconColor: string
+  sparkColor: string
+  sparkVariant?: "wave" | "flat" | "up"
+  subtitle?: string
+  subtitleColor?: string
+}
+
+function DarkStatsCard({
+  label,
+  value,
+  icon: Icon,
+  iconColor,
+  sparkColor,
+  sparkVariant = "wave",
+  subtitle,
+  subtitleColor = "text-white/40",
+}: DarkStatsCardProps) {
+  return (
+    <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 group">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <span className="text-[11px] font-bold text-white/60 uppercase tracking-widest">
+            {label}
+          </span>
+          <div
+            className={`w-8 h-8 rounded-lg ${iconColor} flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity`}
+          >
+            <Icon className="w-4 h-4 text-white" />
+          </div>
+        </div>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-3xl font-extrabold text-white tracking-tight">
+              {value}
+            </p>
+            {subtitle && (
+              <p className={`text-[11px] ${subtitleColor} mt-1 font-medium`}>
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <MiniSparkline color={sparkColor} variant={sparkVariant} />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 interface PayoutRecord {
   id: string
@@ -49,79 +131,64 @@ const RiderEarningsPage = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-white tracking-tight">
           Earnings & Payouts
         </h1>
-        <p className="text-sm text-neutral-500 mt-0.5">
+        <p className="text-sm text-white/50 mt-0.5">
           View your daily courier wages, trip bonuses, and weekly payout records.
         </p>
       </div>
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Total Earnings
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-[#CAEA3C]/30 text-[#3d5a00] flex items-center justify-center">
-              <Wallet className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">৳ 24,850</p>
-          <p className="text-xs text-neutral-500 mt-1">Lifetime courier payouts</p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Available Balance
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <ArrowDownRight className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-emerald-600 mt-2">৳ 3,420</p>
-          <p className="text-xs text-neutral-500 mt-1">Scheduled for next Monday</p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              This Week's Bonuses
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
-              <ArrowUpRight className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">৳ 850</p>
-          <p className="text-xs text-amber-600 mt-1 font-medium">
-            Peak hours & ratings reward
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              Completed Trips
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-neutral-900 mt-2">184</p>
-          <p className="text-xs text-neutral-500 mt-1">Total completed parcels</p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <DarkStatsCard
+          label="Total Earnings"
+          value="৳24,850"
+          icon={Wallet}
+          iconColor="bg-[#CAEA3C]/30"
+          sparkColor="#CAEA3C"
+          sparkVariant="up"
+          subtitle="Lifetime courier payouts"
+        />
+        <DarkStatsCard
+          label="Available Balance"
+          value="৳3,420"
+          icon={ArrowDownRight}
+          iconColor="bg-emerald-500/30"
+          sparkColor="#34d399"
+          sparkVariant="wave"
+          subtitle="Scheduled for next Monday"
+          subtitleColor="text-emerald-400"
+        />
+        <DarkStatsCard
+          label="This Week's Bonuses"
+          value="৳850"
+          icon={ArrowUpRight}
+          iconColor="bg-amber-500/30"
+          sparkColor="#f59e0b"
+          sparkVariant="up"
+          subtitle="Peak hours & ratings reward"
+          subtitleColor="text-amber-400"
+        />
+        <DarkStatsCard
+          label="Completed Trips"
+          value={184}
+          icon={CheckCircle2}
+          iconColor="bg-blue-500/30"
+          sparkColor="#60a5fa"
+          sparkVariant="wave"
+          subtitle="Total completed parcels"
+        />
       </div>
 
       {/* Payout History Table */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
-        <div className="p-5 sm:p-6 border-b border-neutral-100 flex items-center justify-between">
+      <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm overflow-hidden">
+        <div className="p-5 sm:p-6 border-b border-white/5 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-neutral-900 tracking-tight">
+            <h2 className="text-lg font-bold text-white tracking-tight">
               Recent Weekly Payouts
             </h2>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-white/40">
               Direct disbursements to your registered mobile wallet
             </p>
           </div>
@@ -129,7 +196,7 @@ const RiderEarningsPage = () => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-neutral-50/75 border-b border-neutral-200/70 text-neutral-500 uppercase tracking-wider">
+            <thead className="bg-white/[0.03] border-b border-white/5 text-white/40 uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-5 font-semibold">Payout Date</th>
                 <th className="py-3 px-5 font-semibold">Deliveries Done</th>
@@ -140,32 +207,32 @@ const RiderEarningsPage = () => {
                 <th className="py-3 px-5 font-semibold">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-white/5">
               {mockPayouts.map((record) => (
                 <tr
                   key={record.id}
-                  className="hover:bg-neutral-50/50 transition-colors"
+                  className="hover:bg-white/[0.02] transition-colors"
                 >
-                  <td className="py-4 px-5 font-semibold text-neutral-900">
+                  <td className="py-4 px-5 font-semibold text-white">
                     {record.payoutDate}
                   </td>
-                  <td className="py-4 px-5 text-neutral-700">
+                  <td className="py-4 px-5 text-white/60">
                     {record.tripsCount} parcels
                   </td>
-                  <td className="py-4 px-5 font-mono text-neutral-900">
+                  <td className="py-4 px-5 font-mono text-white">
                     ৳ {record.deliveryFees}
                   </td>
-                  <td className="py-4 px-5 font-mono text-emerald-600 font-semibold">
+                  <td className="py-4 px-5 font-mono text-emerald-400 font-semibold">
                     +৳ {record.bonusAmount}
                   </td>
-                  <td className="py-4 px-5 font-mono font-bold text-neutral-900 text-sm">
+                  <td className="py-4 px-5 font-mono font-bold text-white text-sm">
                     ৳ {record.totalAmount}
                   </td>
-                  <td className="py-4 px-5 text-neutral-600 font-medium">
+                  <td className="py-4 px-5 text-white/60 font-medium">
                     {record.paymentMethod}
                   </td>
                   <td className="py-4 px-5">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-500/20">
                       <CheckCircle2 className="w-3 h-3" />
                       {record.status}
                     </span>
@@ -175,7 +242,7 @@ const RiderEarningsPage = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

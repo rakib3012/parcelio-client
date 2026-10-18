@@ -257,55 +257,55 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="w-full bg-neutral-50/50 min-h-screen">
-      <div className="bg-white rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 shadow-xs   ">
+    <div className="w-full bg-neutral-50/50 dark:bg-transparent min-h-screen">
+      <div className="bg-white dark:bg-[#151a23] rounded-3xl p-6 sm:p-10 lg:p-14 border border-neutral-200/80 dark:border-white/10 shadow-xs transition-colors">
         {/* Header Title */}
         <header className="space-y-1">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B3B3C] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B3B3C] dark:text-white tracking-tight">
             Send A Parcel
           </h1>
-          <h2 className="text-lg sm:text-xl font-bold text-[#0B3B3C] pt-4">
+          <h2 className="text-lg sm:text-xl font-bold text-[#0B3B3C] dark:text-lime-400 pt-4">
             Enter your parcel details
           </h2>
         </header>
 
         {/* Success Screen after confirmation */}
         {confirmedBooking ? (
-          <div className="mt-8 p-6 sm:p-10 bg-teal-50/70 border border-teal-200 rounded-3xl animate-in fade-in slide-in-from-top-3">
+          <div className="mt-8 p-6 sm:p-10 bg-teal-50/70 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-800/50 rounded-3xl animate-in fade-in slide-in-from-top-3">
             <div className="max-w-xl mx-auto text-center space-y-4">
-              <div className="w-16 h-16 bg-teal-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
+              <div className="w-16 h-16 bg-teal-600 dark:bg-teal-500 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
-              <h3 className="text-2xl font-extrabold text-teal-950">
+              <h3 className="text-2xl font-extrabold text-teal-950 dark:text-white">
                 Booking Confirmed!
               </h3>
-              <p className="text-sm text-teal-800 leading-relaxed">
+              <p className="text-sm text-teal-800 dark:text-neutral-300 leading-relaxed">
                 Your parcel booking request has been successfully scheduled. Our delivery rider
                 will pick up the parcel today between{" "}
-                <span className="font-bold">4:00 PM – 7:00 PM</span>.
+                <span className="font-bold text-teal-950 dark:text-lime-400">4:00 PM – 7:00 PM</span>.
               </p>
 
               {/* Tracking ID Badge */}
-              <div className="bg-white border border-teal-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs mt-4">
+              <div className="bg-white dark:bg-[#10141d] border border-teal-200 dark:border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs mt-4">
                 <div className="text-left">
-                  <span className="text-xs text-neutral-500 font-medium">Tracking Number</span>
-                  <div className="text-lg font-mono font-bold text-teal-950">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">Tracking Number</span>
+                  <div className="text-lg font-mono font-bold text-teal-950 dark:text-white">
                     {confirmedBooking.trackingId}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleCopyTracking(confirmedBooking.trackingId)}
-                  className="px-3.5 py-2 text-xs font-semibold text-teal-800 bg-teal-100/70 hover:bg-teal-200/70 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 text-xs font-semibold text-teal-800 dark:text-lime-400 bg-teal-100/70 dark:bg-lime-950/40 hover:bg-teal-200/70 dark:hover:bg-lime-900/40 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   {copiedTracking ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-teal-700" />
+                      <Check className="w-3.5 h-3.5 text-teal-700 dark:text-lime-400" />
                       <span>Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5 text-teal-700" />
+                      <Copy className="w-3.5 h-3.5 text-teal-700 dark:text-lime-400" />
                       <span>Copy Tracking ID</span>
                     </>
                   )}
@@ -314,27 +314,27 @@ export default function BookingPage() {
 
               {/* Summary Details */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 text-left">
-                <div className="bg-white/80 p-3 rounded-xl border border-teal-100">
-                  <span className="text-[11px] text-neutral-500 block">Type</span>
-                  <span className="text-xs font-bold text-neutral-800 capitalize">
+                <div className="bg-white/80 dark:bg-[#10141d] p-3 rounded-xl border border-teal-100 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block">Type</span>
+                  <span className="text-xs font-bold text-neutral-800 dark:text-white capitalize">
                     {confirmedBooking.data.parcelType}
                   </span>
                 </div>
-                <div className="bg-white/80 p-3 rounded-xl border border-teal-100">
-                  <span className="text-[11px] text-neutral-500 block">Weight</span>
-                  <span className="text-xs font-bold text-neutral-800">
+                <div className="bg-white/80 dark:bg-[#10141d] p-3 rounded-xl border border-teal-100 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block">Weight</span>
+                  <span className="text-xs font-bold text-neutral-800 dark:text-white">
                     {confirmedBooking.data.parcelWeight} KG
                   </span>
                 </div>
-                <div className="bg-white/80 p-3 rounded-xl border border-teal-100">
-                  <span className="text-[11px] text-neutral-500 block">Route</span>
-                  <span className="text-xs font-bold text-neutral-800 truncate block">
+                <div className="bg-white/80 dark:bg-[#10141d] p-3 rounded-xl border border-teal-100 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block">Route</span>
+                  <span className="text-xs font-bold text-neutral-800 dark:text-white truncate block">
                     {confirmedBooking.data.senderDistrict} → {confirmedBooking.data.receiverDistrict}
                   </span>
                 </div>
-                <div className="bg-white/80 p-3 rounded-xl border border-teal-100">
-                  <span className="text-[11px] text-neutral-500 block">Estimated Charge</span>
-                  <span className="text-xs font-bold text-teal-700">
+                <div className="bg-white/80 dark:bg-[#10141d] p-3 rounded-xl border border-teal-100 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block">Estimated Charge</span>
+                  <span className="text-xs font-bold text-teal-700 dark:text-lime-400">
                     ৳ {confirmedBooking.estimatedCost} BDT
                   </span>
                 </div>
@@ -352,7 +352,7 @@ export default function BookingPage() {
                 <button
                   type="button"
                   onClick={handleBookAnother}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-teal-300 bg-white hover:bg-teal-50/60 text-teal-900 text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-teal-300 dark:border-white/20 bg-white dark:bg-[#10141d] hover:bg-teal-50/60 dark:hover:bg-white/10 text-teal-900 dark:text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4" />
                   <span>Book Another Parcel</span>
@@ -381,20 +381,20 @@ export default function BookingPage() {
                       className={cn(
                         "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
                         field.value === "document"
-                          ? "border-emerald-600 bg-white"
-                          : "border-neutral-300 group-hover:border-neutral-400"
+                          ? "border-emerald-600 bg-white dark:bg-[#10141d]"
+                          : "border-neutral-300 dark:border-white/20 group-hover:border-neutral-400 dark:group-hover:border-white/40"
                       )}
                     >
                       {field.value === "document" && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-lime-400" />
                       )}
                     </div>
                     <span
                       className={cn(
                         "text-sm font-semibold transition-colors",
                         field.value === "document"
-                          ? "text-neutral-900"
-                          : "text-neutral-600 group-hover:text-neutral-900"
+                          ? "text-neutral-900 dark:text-white"
+                          : "text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
                       )}
                     >
                       Document
@@ -410,20 +410,20 @@ export default function BookingPage() {
                       className={cn(
                         "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
                         field.value === "not-document"
-                          ? "border-emerald-600 bg-white"
-                          : "border-neutral-300 group-hover:border-neutral-400"
+                          ? "border-emerald-600 bg-white dark:bg-[#10141d]"
+                          : "border-neutral-300 dark:border-white/20 group-hover:border-neutral-400 dark:group-hover:border-white/40"
                       )}
                     >
                       {field.value === "not-document" && (
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-lime-400" />
                       )}
                     </div>
                     <span
                       className={cn(
                         "text-sm font-semibold transition-colors",
                         field.value === "not-document"
-                          ? "text-neutral-900"
-                          : "text-neutral-600 group-hover:text-neutral-900"
+                          ? "text-neutral-900 dark:text-white"
+                          : "text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
                       )}
                     >
                       Not-Document
@@ -437,7 +437,7 @@ export default function BookingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               {/* Parcel Name */}
               <div className="space-y-1.5">
-                <Label htmlFor="parcelName" className="text-xs font-semibold text-neutral-700">
+                <Label htmlFor="parcelName" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                   Parcel Name
                 </Label>
                 <Input
@@ -447,13 +447,13 @@ export default function BookingPage() {
                   {...register("parcelName")}
                   aria-invalid={errors.parcelName ? "true" : "false"}
                   className={cn(
-                    "h-11 bg-white border-neutral-300 text-sm",
+                    "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                     errors.parcelName &&
                       "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                   )}
                 />
                 {errors.parcelName && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.parcelName.message}</span>
                   </p>
@@ -462,7 +462,7 @@ export default function BookingPage() {
 
               {/* Parcel Weight (KG) */}
               <div className="space-y-1.5">
-                <Label htmlFor="parcelWeight" className="text-xs font-semibold text-neutral-700">
+                <Label htmlFor="parcelWeight" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                   Parcel Weight (KG)
                 </Label>
                 <Input
@@ -474,13 +474,13 @@ export default function BookingPage() {
                   {...register("parcelWeight")}
                   aria-invalid={errors.parcelWeight ? "true" : "false"}
                   className={cn(
-                    "h-11 bg-white border-neutral-300 text-sm",
+                    "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                     errors.parcelWeight &&
                       "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                   )}
                 />
                 {errors.parcelWeight && (
-                  <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.parcelWeight.message}</span>
                   </p>
@@ -489,19 +489,19 @@ export default function BookingPage() {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-neutral-200/80 my-8" />
+            <div className="border-t border-neutral-200/80 dark:border-white/10 my-8" />
 
             {/* 2-Column Section: Sender Details & Receiver Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
               {/* Left Column: Sender Details */}
               <div className="space-y-4">
-                <h3 className="text-base sm:text-lg font-bold text-[#0B3B3C]">
+                <h3 className="text-base sm:text-lg font-bold text-[#0B3B3C] dark:text-white">
                   Sender Details
                 </h3>
 
                 {/* Sender Name */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="senderName" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="senderName" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Sender Name
                   </Label>
                   <Input
@@ -511,13 +511,13 @@ export default function BookingPage() {
                     {...register("senderName")}
                     aria-invalid={errors.senderName ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.senderName &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.senderName && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.senderName.message}</span>
                     </p>
@@ -526,7 +526,7 @@ export default function BookingPage() {
 
                 {/* Sender Address */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="senderAddress" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="senderAddress" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Address
                   </Label>
                   <Input
@@ -536,13 +536,13 @@ export default function BookingPage() {
                     {...register("senderAddress")}
                     aria-invalid={errors.senderAddress ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.senderAddress &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.senderAddress && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.senderAddress.message}</span>
                     </p>
@@ -551,7 +551,7 @@ export default function BookingPage() {
 
                 {/* Sender Phone No */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="senderPhone" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="senderPhone" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Sender Phone No
                   </Label>
                   <Input
@@ -561,13 +561,13 @@ export default function BookingPage() {
                     {...register("senderPhone")}
                     aria-invalid={errors.senderPhone ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.senderPhone &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.senderPhone && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.senderPhone.message}</span>
                     </p>
@@ -576,7 +576,7 @@ export default function BookingPage() {
 
                 {/* Sender District (Shadcn Select) */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="senderDistrict" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="senderDistrict" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Your District
                   </Label>
                   <Controller
@@ -591,7 +591,7 @@ export default function BookingPage() {
                         <SelectTrigger
                           id="senderDistrict"
                           className={cn(
-                            "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                            "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
                             errors.senderDistrict &&
                               "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                           )}
@@ -613,7 +613,7 @@ export default function BookingPage() {
                     )}
                   />
                   {errors.senderDistrict && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.senderDistrict.message}</span>
                     </p>
@@ -622,7 +622,7 @@ export default function BookingPage() {
 
                 {/* Pickup Instruction */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="pickupInstruction" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="pickupInstruction" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Pickup Instruction
                   </Label>
                   <Textarea
@@ -630,20 +630,20 @@ export default function BookingPage() {
                     rows={3}
                     placeholder="Pickup Instruction"
                     {...register("pickupInstruction")}
-                    className="resize-y"
+                    className="resize-y bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
 
               {/* Right Column: Receiver Details */}
               <div className="space-y-4">
-                <h3 className="text-base sm:text-lg font-bold text-[#0B3B3C]">
+                <h3 className="text-base sm:text-lg font-bold text-[#0B3B3C] dark:text-white">
                   Receiver Details
                 </h3>
 
                 {/* Receiver Name */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="receiverName" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="receiverName" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Receiver Name
                   </Label>
                   <Input
@@ -653,13 +653,13 @@ export default function BookingPage() {
                     {...register("receiverName")}
                     aria-invalid={errors.receiverName ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.receiverName &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.receiverName && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.receiverName.message}</span>
                     </p>
@@ -668,7 +668,7 @@ export default function BookingPage() {
 
                 {/* Receiver Address */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="receiverAddress" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="receiverAddress" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Receiver Address
                   </Label>
                   <Input
@@ -678,13 +678,13 @@ export default function BookingPage() {
                     {...register("receiverAddress")}
                     aria-invalid={errors.receiverAddress ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.receiverAddress &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.receiverAddress && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.receiverAddress.message}</span>
                     </p>
@@ -693,7 +693,7 @@ export default function BookingPage() {
 
                 {/* Receiver Contact No */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="receiverPhone" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="receiverPhone" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Receiver Contact No
                   </Label>
                   <Input
@@ -703,13 +703,13 @@ export default function BookingPage() {
                     {...register("receiverPhone")}
                     aria-invalid={errors.receiverPhone ? "true" : "false"}
                     className={cn(
-                      "h-11 bg-white border-neutral-300 text-sm",
+                      "h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm",
                       errors.receiverPhone &&
                         "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                     )}
                   />
                   {errors.receiverPhone && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.receiverPhone.message}</span>
                     </p>
@@ -718,7 +718,7 @@ export default function BookingPage() {
 
                 {/* Receiver District (Shadcn Select) */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="receiverDistrict" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="receiverDistrict" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Receiver District
                   </Label>
                   <Controller
@@ -733,7 +733,7 @@ export default function BookingPage() {
                         <SelectTrigger
                           id="receiverDistrict"
                           className={cn(
-                            "w-full h-11 bg-white border-neutral-300 text-sm px-3.5",
+                            "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
                             errors.receiverDistrict &&
                               "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
                           )}
@@ -755,7 +755,7 @@ export default function BookingPage() {
                     )}
                   />
                   {errors.receiverDistrict && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.receiverDistrict.message}</span>
                     </p>
@@ -764,7 +764,7 @@ export default function BookingPage() {
 
                 {/* Delivery Instruction */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="deliveryInstruction" className="text-xs font-semibold text-neutral-700">
+                  <Label htmlFor="deliveryInstruction" className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Delivery Instruction
                   </Label>
                   <Textarea
@@ -772,7 +772,7 @@ export default function BookingPage() {
                     rows={3}
                     placeholder="Delivery Instruction"
                     {...register("deliveryInstruction")}
-                    className="resize-y"
+                    className="resize-y bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white"
                   />
                 </div>
               </div>
@@ -780,22 +780,22 @@ export default function BookingPage() {
 
             {/* Price Preview Card (if details selected) */}
             {estimatedCost > 0 && (
-              <div className="p-4 bg-lime-50/70 border border-lime-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
-                <div className="flex items-center gap-2.5 text-lime-950 font-medium">
-                  <Package className="w-4 h-4 text-lime-700 shrink-0" />
+              <div className="p-4 bg-lime-50/70 dark:bg-lime-950/30 border border-lime-200 dark:border-lime-500/30 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
+                <div className="flex items-center gap-2.5 text-lime-950 dark:text-lime-300 font-medium">
+                  <Package className="w-4 h-4 text-lime-700 dark:text-lime-400 shrink-0" />
                   <span>
                     Estimated Delivery Charge ({senderDistrict === receiverDistrict ? "Intra-District" : "Inter-District"}):
                   </span>
                 </div>
-                <div className="text-lg font-extrabold text-lime-950">
-                  ৳ {estimatedCost} <span className="text-xs font-normal text-lime-800">BDT</span>
+                <div className="text-lg font-extrabold text-lime-950 dark:text-lime-400">
+                  ৳ {estimatedCost} <span className="text-xs font-normal text-lime-800 dark:text-lime-300">BDT</span>
                 </div>
               </div>
             )}
 
             {/* Note & Submit Button */}
             <div className="pt-2 space-y-4">
-              <p className="text-xs text-neutral-600 font-medium">
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                 * PickUp Time 4pm-7pm Approx.
               </p>
 

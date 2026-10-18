@@ -4,7 +4,7 @@ import Footer from "@/components/Footer/Footer"
 
 const RootLayout = () => {
   return (
-    <div className="min-h-screen bg-neutral-100 flex flex-col font-sans text-neutral-900 antialiased">
+    <div className="min-h-screen bg-neutral-100 dark:bg-[#0f1419] flex flex-col font-sans text-neutral-900 dark:text-neutral-100 antialiased transition-colors">
       <Navbar />
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Outlet />

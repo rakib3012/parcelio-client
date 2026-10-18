@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Search, CheckCircle2, Phone, MapPin } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface DeliveryItem {
   id: string
@@ -107,99 +108,101 @@ const RiderDeliveriesPage = () => {
       {/* Page Title */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-white tracking-tight">
             Assigned Deliveries
           </h1>
-          <p className="text-sm text-neutral-500 mt-0.5">
+          <p className="text-sm text-white/50 mt-0.5">
             Manage your daily route parcels, verify COD collections, and mark completions.
           </p>
         </div>
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-neutral-200/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        {/* Tab Buttons */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-          {["All", "Pending Pickup", "In Transit", "Delivered"].map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
-                activeTab === tab
-                  ? "bg-[#1C1D20] text-white"
-                  : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+      <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm">
+        <CardContent className="p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          {/* Tab Buttons */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {["All", "Pending Pickup", "In Transit", "Delivered"].map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+                  activeTab === tab
+                    ? "bg-[#CAEA3C] text-neutral-900"
+                    : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
 
-        {/* Search */}
-        <div className="relative min-w-[260px]">
-          <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by tracking, customer or area..."
-            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#CAEA3C] focus:bg-white transition-all"
-          />
-        </div>
-      </div>
+          {/* Search */}
+          <div className="relative min-w-[260px]">
+            <Search className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by tracking, customer or area..."
+              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#CAEA3C]/50 focus:bg-white/[0.08] transition-all"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Deliveries Table / Cards */}
-      <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
-        <div className="divide-y divide-neutral-100">
+      {/* Deliveries Cards */}
+      <Card className="bg-[#1a1f2e]/80 border-white/10 backdrop-blur-sm overflow-hidden">
+        <div className="divide-y divide-white/5">
           {filteredDeliveries.length === 0 ? (
-            <div className="p-12 text-center text-sm text-neutral-500">
+            <div className="p-12 text-center text-sm text-white/40">
               No deliveries match the filter criteria.
             </div>
           ) : (
             filteredDeliveries.map((delivery) => (
               <div
                 key={delivery.id}
-                className="p-5 sm:p-6 hover:bg-neutral-50/50 transition-colors flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+                className="p-5 sm:p-6 hover:bg-white/[0.02] transition-colors flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-neutral-900 bg-neutral-100 px-2.5 py-1 rounded-lg">
+                    <span className="font-mono text-xs font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                       {delivery.trackingCode}
                     </span>
                     <span
                       className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
                         delivery.deliveryStatus === "Delivered"
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-emerald-500/20 text-emerald-400"
                           : delivery.deliveryStatus === "In Transit"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-blue-100 text-blue-800"
+                          ? "bg-amber-500/20 text-amber-400"
+                          : "bg-blue-500/20 text-blue-400"
                       }`}
                     >
                       {delivery.deliveryStatus}
                     </span>
-                    <span className="text-[11px] text-neutral-500">
+                    <span className="text-[11px] text-white/40">
                       Assigned: {delivery.assignedTime}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs">
                     <div>
-                      <span className="text-neutral-500">Customer: </span>
-                      <span className="font-semibold text-neutral-900">
+                      <span className="text-white/40">Customer: </span>
+                      <span className="font-semibold text-white">
                         {delivery.customerName}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-neutral-600">
-                      <Phone className="w-3.5 h-3.5 text-neutral-400" />
+                    <div className="flex items-center gap-1.5 text-white/60">
+                      <Phone className="w-3.5 h-3.5 text-white/30" />
                       <span>{delivery.customerPhone}</span>
                     </div>
                     <div>
-                      <span className="text-neutral-500">Type: </span>
-                      <span className="text-neutral-800">{delivery.packageType}</span>
+                      <span className="text-white/40">Type: </span>
+                      <span className="text-white/70">{delivery.packageType}</span>
                     </div>
-                    <div className="sm:col-span-2 lg:col-span-3 flex items-center gap-1.5 text-neutral-600">
-                      <MapPin className="w-3.5 h-3.5 text-neutral-400 flex-shrink-0" />
+                    <div className="sm:col-span-2 lg:col-span-3 flex items-center gap-1.5 text-white/60">
+                      <MapPin className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
                       <span>
                         {delivery.deliveryAddress}, {delivery.district}
                       </span>
@@ -208,12 +211,12 @@ const RiderDeliveriesPage = () => {
                 </div>
 
                 {/* COD & Action Buttons */}
-                <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-neutral-100">
+                <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-white/5">
                   <div className="text-left lg:text-right">
-                    <span className="text-[10px] uppercase font-bold text-neutral-400 block">
+                    <span className="text-[10px] uppercase font-bold text-white/30 block">
                       COD Collection
                     </span>
-                    <span className="text-base font-extrabold text-neutral-900 font-mono">
+                    <span className="text-base font-extrabold text-white font-mono">
                       {delivery.codAmount > 0
                         ? `৳ ${delivery.codAmount}`
                         : "Paid Online"}
@@ -227,7 +230,7 @@ const RiderDeliveriesPage = () => {
                         onClick={() =>
                           handleUpdateStatus(delivery.id, "In Transit")
                         }
-                        className="px-3.5 py-2 text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 rounded-xl transition-colors shadow-xs"
+                        className="px-3.5 py-2 text-xs font-semibold bg-white/10 text-white hover:bg-white/15 rounded-xl transition-colors border border-white/10"
                       >
                         Start Delivery
                       </button>
@@ -238,14 +241,14 @@ const RiderDeliveriesPage = () => {
                         onClick={() =>
                           handleUpdateStatus(delivery.id, "Delivered")
                         }
-                        className="px-3.5 py-2 text-xs font-semibold bg-[#CAEA3C] text-neutral-900 hover:bg-[#b8d82d] rounded-xl transition-colors shadow-xs flex items-center gap-1.5"
+                        className="px-3.5 py-2 text-xs font-semibold bg-[#CAEA3C] text-neutral-900 hover:bg-[#d4f050] rounded-xl transition-colors shadow-sm flex items-center gap-1.5"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Mark Delivered</span>
                       </button>
                     )}
                     {delivery.deliveryStatus === "Delivered" && (
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1">
+                      <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 px-3 py-1.5 rounded-xl border border-emerald-500/20 flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         Delivered
                       </span>
@@ -256,7 +259,7 @@ const RiderDeliveriesPage = () => {
             ))
           )}
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

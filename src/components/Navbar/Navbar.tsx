@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router"
 import { ArrowUpRight, Menu, X, LayoutDashboard, LogOut, Shield, Bike } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import Cookies from "js-cookie"
+import { ModeToggle } from "@/components/mode-toggle"
 
 interface NavigationItem {
   label: string
@@ -44,7 +45,7 @@ const Navbar = () => {
   }
 
   return (
-    <header className="w-full bg-white border-b border-neutral-200/80 sticky top-0 z-50 shadow-xs">
+    <header className="w-full bg-white/95 dark:bg-[#151a23]/95 backdrop-blur-md border-b border-neutral-200/80 dark:border-white/10 sticky top-0 z-50 shadow-xs transition-colors">
       <nav
         aria-label="Main Navigation"
         className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between transition-all"
@@ -53,14 +54,14 @@ const Navbar = () => {
         <Link
           to="/"
           onClick={handleCloseMobileMenu}
-          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-800 rounded-lg"
+          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-800 dark:focus-visible:ring-neutral-200 rounded-lg"
         >
           <img
             src={"/assets/logo.png"}
             alt="Parcelio Logo"
             className="h-7 w-auto object-contain transition-transform group-hover:scale-105"
           />
-          <span className="text-xl font-bold tracking-tight text-neutral-900">
+          <span className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
            Parcelio
           </span>
         </Link>
@@ -74,8 +75,8 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   `text-sm font-medium transition-colors ${
                     isActive
-                      ? "text-neutral-950 font-semibold"
-                      : "text-neutral-600 hover:text-neutral-950"
+                      ? "text-neutral-950 dark:text-white font-semibold"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white"
                   }`
                 }
               >
@@ -87,12 +88,14 @@ const Navbar = () => {
 
         {/* Desktop Right Action Area */}
         <div className="hidden md:flex items-center gap-3">
+          <ModeToggle />
+
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               {currentUser?.role === "admin" ? (
                 <Link
                   to="/admin"
-                  className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-white bg-neutral-900 hover:bg-neutral-800 rounded-full transition-colors shadow-xs"
+                  className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold text-white bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 rounded-full transition-colors shadow-xs"
                 >
                   <Shield className="w-4 h-4 text-[#caea4d]" />
                   <span>Admin</span>
@@ -108,9 +111,9 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/user_dashboard"
-                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 hover:border-neutral-400 transition-colors shadow-xs"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors shadow-xs"
                 >
-                  <LayoutDashboard className="w-4 h-4 text-neutral-700" />
+                  <LayoutDashboard className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                   <span>Dashboard</span>
                 </Link>
               )}
@@ -118,7 +121,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleUserLogout}
-                className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-neutral-600 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-colors"
                 title={`Signed in as ${currentUser?.fullName || "User"}`}
               >
                 <LogOut className="w-4 h-4" />
@@ -129,7 +132,7 @@ const Navbar = () => {
             <div className="flex items-center gap-2.5">
               <Link
                 to="/login"
-                className="px-5 py-2 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 hover:border-neutral-400 transition-colors shadow-xs"
+                className="px-5 py-2 text-sm font-semibold text-neutral-800 dark:text-neutral-200 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors shadow-xs"
               >
                 Sign In
               </Link>
@@ -152,26 +155,29 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
-        <button
-          type="button"
-          onClick={handleToggleMobileMenu}
-          aria-expanded={isMobileMenuOpen}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          className="md:hidden p-2 rounded-lg text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
+        {/* Mobile Action & Menu Button */}
+        <div className="flex md:hidden items-center gap-2">
+          <ModeToggle />
+          <button
+            type="button"
+            onClick={handleToggleMobileMenu}
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden w-full border-t border-neutral-200 bg-white px-4 sm:px-6 py-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150">
-          <ul className="flex flex-col gap-3 list-none m-0 p-0 pb-4 border-b border-neutral-100">
+        <div className="md:hidden w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#151a23] px-4 sm:px-6 py-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150 transition-colors">
+          <ul className="flex flex-col gap-3 list-none m-0 p-0 pb-4 border-b border-neutral-100 dark:border-neutral-800">
             {navigationItems.map((navigationItem) => (
               <li key={navigationItem.destinationPath}>
                 <NavLink
@@ -180,8 +186,8 @@ const Navbar = () => {
                   className={({ isActive }) =>
                     `block py-2 px-3 rounded-lg text-base font-medium transition-colors ${
                       isActive
-                        ? "bg-neutral-100 text-neutral-950 font-semibold"
-                        : "text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950"
+                        ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-white font-semibold"
+                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 hover:text-neutral-950 dark:hover:text-white"
                     }`
                   }
                 >
@@ -198,7 +204,7 @@ const Navbar = () => {
                   <Link
                     to="/admin"
                     onClick={handleCloseMobileMenu}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-neutral-900 rounded-full hover:bg-neutral-800 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-full hover:bg-neutral-800 transition-colors"
                   >
                     <Shield className="w-4 h-4 text-[#caea4d]" />
                     <span>Admin Panel</span>
@@ -215,9 +221,9 @@ const Navbar = () => {
                   </Link>
                 ) : (
                   <Link
-                    to="/dashboard"
+                    to="/user_dashboard"
                     onClick={handleCloseMobileMenu}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     <span>Dashboard ({currentUser?.fullName})</span>
@@ -226,7 +232,7 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={handleUserLogout}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-full transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-950/50 rounded-full transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
@@ -237,7 +243,7 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={handleCloseMobileMenu}
-                  className="w-full text-center py-2.5 text-sm font-semibold text-neutral-800 bg-white border border-neutral-300 rounded-full hover:bg-neutral-50 transition-colors"
+                  className="w-full text-center py-2.5 text-sm font-semibold text-neutral-800 dark:text-neutral-200 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors"
                 >
                   Sign In
                 </Link>
