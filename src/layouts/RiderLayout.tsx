@@ -84,7 +84,7 @@ const RiderLayout = () => {
         className={`
           fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col flex-shrink-0
           transition-all duration-300 ease-in-out border-r border-neutral-200 dark:border-white/5
-          ${collapsed ? "w-[72px]" : "w-[260px]"}
+          ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:h-screen
         `}
@@ -348,7 +348,7 @@ const RiderLayout = () => {
                 {userInitial}
               </div>
               <div className="hidden xl:flex flex-col text-left leading-tight">
-                <span className="text-xs font-semibold text-neutral-900 dark:text-white truncate max-w-[120px]">
+                <span className="text-xs font-semibold text-neutral-900 dark:text-white truncate max-w-30">
                   {currentUser?.fullName || "Courier Rider"}
                 </span>
                 <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">

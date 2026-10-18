@@ -157,7 +157,7 @@ const AdminBookingsPage = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-semibold text-neutral-900 dark:text-white truncate max-w-[180px]">
+                          <p className="text-sm font-semibold text-neutral-900 dark:text-white truncate max-w-45">
                             {booking.parcelName}
                           </p>
                           <p className="text-xs text-neutral-400">

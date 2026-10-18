@@ -87,7 +87,7 @@ const UserDashboardLayout = () => {
       {/* Sidebar Navigation */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col shrink-0
+          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col flex-shrink-0
           transition-all duration-300 ease-in-out border-r border-neutral-200 dark:border-white/5
           ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
@@ -101,31 +101,29 @@ const UserDashboardLayout = () => {
           }`}
         >
           {!collapsed ? (
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+            <Link to="/user_dashboard" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center flex-shrink-0 shadow-xs">
                 <Package className="w-4 h-4 text-neutral-900" />
               </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white leading-tight">
+              <div className="flex flex-col">
+                <span className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white">
                   Parcelio
                 </span>
-                <span className="text-[10px] font-semibold text-lime-600 dark:text-[#CAEA3C] uppercase tracking-wider">
+                <span className="text-[10px] font-semibold text-neutral-400 dark:text-white/40 uppercase tracking-widest">
                   Customer Portal
                 </span>
               </div>
             </Link>
           ) : (
-            <Link to="/" title="Parcelio Home">
-              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
-                <Package className="w-4 h-4 text-neutral-900" />
-              </div>
-            </Link>
+            <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center shadow-xs">
+              <Package className="w-4 h-4 text-neutral-900" />
+            </div>
           )}
 
           {/* Close button on mobile view */}
           <button
             type="button"
-            className="lg:hidden p-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 dark:text-white/60 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            className="lg:hidden p-1 text-neutral-500 hover:text-neutral-900 dark:text-white/60 dark:hover:text-white transition-colors cursor-pointer"
             onClick={() => setMobileOpen(false)}
             aria-label="Close sidebar"
           >
@@ -134,7 +132,7 @@ const UserDashboardLayout = () => {
         </div>
 
         {/* Sidebar Nav Links */}
-        <nav className="flex-1 py-4 px-3 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -153,7 +151,7 @@ const UserDashboardLayout = () => {
               {({ isActive }) => (
                 <>
                   <link.icon
-                    className={`w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                    className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                       isActive ? "text-neutral-900" : ""
                     }`}
                   />
@@ -216,9 +214,9 @@ const UserDashboardLayout = () => {
 
         {/* Sidebar Footer — User Profile & Sign Out */}
         <div className="border-t border-neutral-200 dark:border-white/5 p-3 space-y-2">
-          {!collapsed ? (
-            <div className="flex items-center gap-3 px-2 py-1.5 rounded-xl bg-neutral-100/70 dark:bg-white/5">
-              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+          {!collapsed && (
+            <div className="flex items-center gap-3 px-2 py-2">
+              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
                 {userInitial}
               </div>
               <div className="flex flex-col min-w-0">
@@ -230,27 +228,18 @@ const UserDashboardLayout = () => {
                 </span>
               </div>
             </div>
-          ) : (
-            <div className="flex justify-center py-1">
-              <div
-                className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs shadow-xs"
-                title={currentUser?.fullName || "Active User"}
-              >
-                {userInitial}
-              </div>
-            </div>
           )}
 
-          <div className="flex items-center gap-1">
+          <div className={`flex ${collapsed ? "flex-col items-center" : ""} gap-1`}>
             <button
               type="button"
               onClick={handleLogout}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/15 dark:hover:text-red-300 transition-colors w-full cursor-pointer ${
-                collapsed ? "justify-center px-2" : ""
+                collapsed ? "justify-center" : ""
               }`}
               title="Sign Out"
             >
-              <LogOut className="w-4 h-4 shrink-0" />
+              <LogOut className="w-4 h-4 flex-shrink-0" />
               {!collapsed && <span>Sign Out</span>}
             </button>
           </div>
@@ -275,7 +264,7 @@ const UserDashboardLayout = () => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
         {/* Sticky Top Header Bar */}
-        <header className="h-16 shrink-0 bg-white/95 dark:bg-[#151a23]/95 backdrop-blur-md border-b border-neutral-200 dark:border-white/5 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors">
+        <header className="h-16 flex-shrink-0 bg-white/95 dark:bg-[#151a23]/95 backdrop-blur-md border-b border-neutral-200 dark:border-white/5 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors">
           {/* Left section: mobile hamburger & portal badge */}
           <div className="flex items-center gap-3">
             <button
@@ -287,57 +276,29 @@ const UserDashboardLayout = () => {
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-lime-100 text-lime-800 border border-lime-300/80 dark:bg-[#CAEA3C]/15 dark:text-[#CAEA3C] dark:border-[#CAEA3C]/20 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-lime-500 dark:bg-[#CAEA3C]"></span>
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-lime-100 text-lime-800 border border-lime-300/80 dark:bg-[#CAEA3C]/20 dark:text-[#CAEA3C] dark:border-[#CAEA3C]/20">
                 Customer Portal
               </span>
             </div>
           </div>
 
           {/* Right section: Quick actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3">
             <ModeToggle />
-            {/* Back to main website link */}
             <Link
               to="/"
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900 px-3 py-2 rounded-xl border border-neutral-200 hover:bg-neutral-100 dark:text-white/50 dark:hover:text-white dark:border-white/10 dark:hover:bg-white/5 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900 px-3 py-1.5 rounded-lg border border-neutral-200 hover:bg-neutral-100 dark:text-white/50 dark:hover:text-white dark:border-white/10 dark:hover:bg-white/5 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Back to Website</span>
             </Link>
-
-            {/* Admin Panel Link (if user is admin) */}
-            {currentUser?.role === "admin" && (
-              <Link
-                to="/admin"
-                className="hidden md:flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 dark:text-amber-400 dark:bg-amber-400/10 dark:hover:bg-amber-400/15 dark:border-amber-400/15 px-3 py-2 rounded-xl transition-colors"
-              >
-                <Shield className="w-3.5 h-3.5" />
-                <span>Admin</span>
-              </Link>
-            )}
-
-            {/* User Avatar badge */}
-            <div className="flex items-center gap-2 pl-2 border-l border-neutral-200 dark:border-white/10">
-              <div className="w-8 h-8 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs ring-2 ring-neutral-200 dark:ring-[#0f1419] shadow-xs">
-                {userInitial}
-              </div>
-              <div className="hidden xl:flex flex-col text-left leading-tight">
-                <span className="text-xs font-semibold text-neutral-900 dark:text-white truncate max-w-30">
-                  {currentUser?.fullName || "Active User"}
-                </span>
-                <span className="text-[10px] text-neutral-500 dark:text-white/40">Sender</span>
-              </div>
-            </div>
           </div>
         </header>
 
         {/* Main Content Workspace */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-neutral-50 dark:bg-[#0f1419] transition-colors">
-          <div className="max-w-7xl mx-auto">
-            <Outlet />
-          </div>
+          <Outlet />
         </main>
       </div>
     </div>

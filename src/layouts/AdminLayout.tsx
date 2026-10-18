@@ -67,7 +67,7 @@ const AdminLayout = () => {
         className={`
           fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col flex-shrink-0
           transition-all duration-300 ease-in-out border-r border-neutral-200 dark:border-white/5
-          ${collapsed ? "w-[72px]" : "w-[260px]"}
+          ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:h-screen
         `}
