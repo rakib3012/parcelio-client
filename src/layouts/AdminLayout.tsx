@@ -65,7 +65,7 @@ const AdminLayout = () => {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col flex-shrink-0
+          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col shrink-0
           transition-all duration-300 ease-in-out border-r border-neutral-200 dark:border-white/5
           ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
@@ -128,7 +128,7 @@ const AdminLayout = () => {
               {({ isActive }) => (
                 <>
                   <link.icon
-                    className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                    className={`w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                       isActive ? "text-neutral-900" : ""
                     }`}
                   />

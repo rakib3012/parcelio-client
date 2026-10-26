@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react"
-import { useNavigate, useLocation, Link } from "react-router"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Loader2, Eye, EyeOff } from "lucide-react"
-import { useAuthStore } from "@/lib/store/authStore"
-import { useLogin } from "@/lib/hooks/api/auth/login"
-import Cookies from "js-cookie"
-import { GoogleIcon } from "@/components/ui/GoogleIcon"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useLogin } from "@/lib/hooks/api/auth/login";
+ 
+import Cookies from "js-cookie";
+import { GoogleIcon } from "@/components/ui/GoogleIcon";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+ 
 
 // ---------------------------------------------------------------------------
 // Zod Validation Schema
@@ -26,34 +28,49 @@ const loginSchema = z.object({
     .string()
     .min(1, { message: "Password is required" })
     .min(6, { message: "Password must be at least 6 characters" }),
-})
+});
 
-type LoginFormValues = z.infer<typeof loginSchema>
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+// ---------------------------------------------------------------------------
+// Helper to get destination by role (defined outside so it has stable reference)
+// ---------------------------------------------------------------------------
+const getRoleDestination = (role?: string) => {
+  if (role === "admin") return "/admin";
+  if (role === "rider") return "/rider";
+  return "/user_dashboard";
+};
 
 const LoginPage = () => {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const currentUser = useAuthStore((state) => state.currentUser)
-  const login = useAuthStore((state) => state.login)
-  const navigate = useNavigate()
-  const location = useLocation()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
 
-  interface LocationStateWithRedirect {
-    redirectedFromLocation?: {
-      pathname: string
+  // Auto-redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      navigate(getRoleDestination(currentUser.role), { replace: true });
     }
-  }
+  }, [isAuthenticated, currentUser, navigate]);
 
-  const locationState = location.state as LocationStateWithRedirect | null
-  const defaultDestination =
-    currentUser?.role === "admin"
-      ? "/admin"
-      : currentUser?.role === "rider"
-      ? "/rider"
-      : "/user_dashboard"
-  const targetDestination =
-    locationState?.redirectedFromLocation?.pathname || defaultDestination
+  // Check token from cookie if not already authenticated
+  const token =
+    Cookies.get("accessToken") ;
+  // const shouldFetchUser= !isAuthenticated && !!token;
+  // const { data: userData } = useGetUser(
+  //   shouldFetchUser? token : undefined,
+  // );
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", {
+        replace: true,
+      });
+    }
+  }, [token, navigate]);
 
   const {
     register,
@@ -65,20 +82,9 @@ const LoginPage = () => {
       emailAddress: "",
       password: "",
     },
-  })
+  });
 
-  // Auto-redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated && currentUser) {
-      navigate(targetDestination, { replace: true })
-    }
-  }, [isAuthenticated, currentUser, navigate, targetDestination])
-
-  const {
-    mutate: loginMutate,
-    isPending,
-    error: mutationError,
-  } = useLogin()
+  const { mutate: loginMutate, isPending, error: mutationError } = useLogin();
 
   const onFormSubmit = (values: LoginFormValues) => {
     loginMutate(
@@ -88,32 +94,28 @@ const LoginPage = () => {
       },
       {
         onSuccess: (data) => {
-          // Save token to cookie using js-cookie
-          Cookies.set("accessToken", data.data.token, { expires: 7, path: "/", sameSite: "lax" })
-          localStorage.setItem("accessToken", data.data.token)
+          // Save token to cookies and storage
+          Cookies.set("accessToken", data.data.token, {
+            expires: 7,
+            path: "/",
+          });
+          localStorage.setItem("accessToken", data.data.token);
 
-          // Update Zustand auth store
-          login(data.data.userProfile)
+          // Update Zustand store
+          login(data.data.user);
 
-          // Role-based destination logic
-          const userRole = data.data.userProfile.role
-          const roleDestination =
-            userRole === "admin"
-              ? "/admin"
-              : userRole === "rider"
-              ? "/rider"
-              : "/user_dashboard"
-          const destination =
-            locationState?.redirectedFromLocation?.pathname || roleDestination
-          navigate(destination, { replace: true })
+          // Direct redirect by role: admin -> /admin, rider -> /rider, user -> /user_dashboard
+          navigate(getRoleDestination(data.data.user.role), {
+            replace: true,
+          });
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto my-2 sm:my-6 bg-white dark:bg-[#151a23] rounded-3xl border border-neutral-200/80 dark:border-white/10 shadow-xs overflow-hidden transition-colors">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[620px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-155">
         {/* Left Side: Form Content */}
         <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
           <div>
@@ -150,9 +152,18 @@ const LoginPage = () => {
             )}
 
             {/* Form with React Hook Form + Zod */}
-            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4" noValidate>
+            <form
+              onSubmit={handleSubmit(onFormSubmit)}
+              className="space-y-4"
+              noValidate
+            >
               <div className="space-y-1">
-                <Label htmlFor="loginEmail" className="text-neutral-700 dark:text-neutral-200">Email</Label>
+                <Label
+                  htmlFor="loginEmail"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Email
+                </Label>
                 <Input
                   id="loginEmail"
                   type="email"
@@ -160,17 +171,25 @@ const LoginPage = () => {
                   {...register("emailAddress")}
                   className={cn(
                     "h-10 text-sm dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                    errors.emailAddress && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    errors.emailAddress &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                   )}
                   disabled={isPending}
                 />
                 {errors.emailAddress && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.emailAddress.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.emailAddress.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="loginPassword" className="text-neutral-700 dark:text-neutral-200">Password</Label>
+                <Label
+                  htmlFor="loginPassword"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="loginPassword"
@@ -179,7 +198,8 @@ const LoginPage = () => {
                     {...register("password")}
                     className={cn(
                       "h-10 text-sm pr-10 dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                      errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      errors.password &&
+                        "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                     )}
                     disabled={isPending}
                   />
@@ -187,7 +207,9 @@ const LoginPage = () => {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors focus:outline-none cursor-pointer"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -197,7 +219,9 @@ const LoginPage = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.password.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.password.message}
+                  </p>
                 )}
                 <div className="mt-1.5 text-left">
                   <Link
@@ -263,7 +287,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

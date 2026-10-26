@@ -69,7 +69,7 @@ const FaqSection = () => {
             <AccordionItem
               key={faq.id}
               value={`faq-${faq.id}`}
-              className="rounded-2xl border border-neutral-100 dark:border-white/10 bg-white dark:bg-[#151a23] shadow-xs data-[panel-open]:border-[#288E89] dark:data-[panel-open]:border-[#288E89]/60 data-[panel-open]:bg-[#EBF7F5] dark:data-[panel-open]:bg-[#132825] transition-all overflow-hidden"
+              className="rounded-2xl border border-neutral-100 dark:border-white/10 bg-white dark:bg-[#151a23] shadow-xs data-panel-open:border-[#288E89] dark:data-panel-open:border-[#288E89]/60 data-panel-open:bg-[#EBF7F5] dark:data-panel-open:bg-[#132825] transition-all overflow-hidden"
             >
               <AccordionTrigger className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer text-sm sm:text-base font-bold text-neutral-900 dark:text-white data-[panel-open]:text-[#03332D] dark:data-[panel-open]:text-[#CAEA3C] [&>svg]:text-neutral-700 dark:[&>svg]:text-neutral-300 data-[panel-open]:[&>svg]:text-[#288E89] dark:data-[panel-open]:[&>svg]:text-[#CAEA3C]">
                 {faq.question}

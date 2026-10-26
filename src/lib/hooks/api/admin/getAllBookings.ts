@@ -7,6 +7,7 @@ interface ApiError {
 }
 
 export interface AdminBooking {
+  _id: string;
   identifier: string;
   trackingId: string;
   userId: {

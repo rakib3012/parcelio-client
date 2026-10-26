@@ -7,6 +7,7 @@ interface ApiError {
 }
 
 export interface UpdateBookingStatusPayload {
+  id: string;
   status: "pending" | "accepted" | "in_transit" | "delivered" | "cancelled";
   note?: string;
   paymentStatus?: "pending" | "paid" | "cancelled";
@@ -26,11 +27,10 @@ export interface SingleBookingResponse {
   };
 }
 
-export const updateBookingStatus = async ({
-  id,
-  ...payload
-}: UpdateBookingStatusPayload & { id: string }): Promise<SingleBookingResponse> => {
-  const { token, ...bodyData } = payload;
+export const updateBookingStatus = async (payload: UpdateBookingStatusPayload): Promise<SingleBookingResponse> => {
+  const { id, token, ...bodyData } = payload;
+
+console.log("payload>>>>>", payload);
 
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/bookings/${id}/status`,

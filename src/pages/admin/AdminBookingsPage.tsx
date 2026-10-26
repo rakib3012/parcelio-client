@@ -28,7 +28,7 @@ const AdminBookingsPage = () => {
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState("")
   const [detailBooking, setDetailBooking] = useState<AdminBooking | null>(null)
-  const [updateModal, setUpdateModal] = useState<AdminBooking | null>(null)
+  const [bookingDataUpdate, setBookingDataUpdate] = useState<AdminBooking | null>(null)
 
   const token = Cookies.get("accessToken")
 
@@ -204,7 +204,7 @@ const AdminBookingsPage = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => setUpdateModal(booking)}
+                            onClick={() => setBookingDataUpdate(booking)}
                             className="p-2 text-neutral-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-lg transition-colors cursor-pointer"
                             title="Update Status"
                           >
@@ -260,7 +260,7 @@ const AdminBookingsPage = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setUpdateModal(booking)}
+                        onClick={() => setBookingDataUpdate(booking)}
                         className="p-2 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 rounded-lg cursor-pointer"
                       >
                         <ArrowUpDown className="w-3.5 h-3.5" />
@@ -308,16 +308,16 @@ const AdminBookingsPage = () => {
           onClose={() => setDetailBooking(null)}
           onUpdateStatus={() => {
             setDetailBooking(null)
-            setUpdateModal(detailBooking)
+            setBookingDataUpdate(detailBooking)
           }}
         />
       )}
 
       {/* Status Update Modal */}
-      {updateModal && (
+      {bookingDataUpdate && (
         <StatusUpdateModal
-          booking={updateModal}
-          onClose={() => setUpdateModal(null)}
+          booking={bookingDataUpdate}
+          onClose={() => setBookingDataUpdate(null)}
         />
       )}
     </div>

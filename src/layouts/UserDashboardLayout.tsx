@@ -8,7 +8,6 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Shield,
   Menu,
   X,
   ArrowLeft,
@@ -87,7 +86,7 @@ const UserDashboardLayout = () => {
       {/* Sidebar Navigation */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col flex-shrink-0
+          fixed top-0 left-0 h-screen z-40 bg-white dark:bg-[#151a23] text-neutral-800 dark:text-white flex flex-col shrink-0
           transition-all duration-300 ease-in-out border-r border-neutral-200 dark:border-white/5
           ${collapsed ? "w-18" : "w-65"}
           ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
@@ -102,7 +101,7 @@ const UserDashboardLayout = () => {
         >
           {!collapsed ? (
             <Link to="/user_dashboard" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center flex-shrink-0 shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-[#CAEA3C] flex items-center justify-center shrink-0 shadow-xs">
                 <Package className="w-4 h-4 text-neutral-900" />
               </div>
               <div className="flex flex-col">
@@ -151,7 +150,7 @@ const UserDashboardLayout = () => {
               {({ isActive }) => (
                 <>
                   <link.icon
-                    className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                    className={`w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                       isActive ? "text-neutral-900" : ""
                     }`}
                   />
@@ -175,48 +174,13 @@ const UserDashboardLayout = () => {
               )}
             </NavLink>
           ))}
-
-          {/* Admin shortcut if user is admin */}
-          {currentUser?.role === "admin" && (
-            <div className="pt-2">
-              <div
-                className={`text-[10px] font-semibold text-neutral-400 dark:text-white/30 uppercase tracking-widest px-3 mb-1.5 ${
-                  collapsed ? "hidden" : "block"
-                }`}
-              >
-                Management
-              </div>
-              <NavLink
-                to="/admin"
-                onClick={() => setMobileOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                    isActive
-                      ? "bg-amber-400 text-neutral-950 font-semibold"
-                      : "text-amber-700 dark:text-amber-300/80 hover:text-amber-800 dark:hover:text-amber-200 bg-amber-50 dark:bg-amber-400/10 border border-amber-200 dark:border-amber-400/15"
-                  } ${collapsed ? "justify-center px-2" : ""}`
-                }
-                title={collapsed ? "Admin Panel" : undefined}
-              >
-                <Shield className="w-5 h-5 shrink-0" />
-                {!collapsed && (
-                  <div className="flex items-center justify-between flex-1 min-w-0">
-                    <span className="truncate">Admin Panel</span>
-                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 dark:bg-amber-400/20 dark:text-amber-200">
-                      Admin
-                    </span>
-                  </div>
-                )}
-              </NavLink>
-            </div>
-          )}
         </nav>
 
         {/* Sidebar Footer — User Profile & Sign Out */}
         <div className="border-t border-neutral-200 dark:border-white/5 p-3 space-y-2">
           {!collapsed && (
             <div className="flex items-center gap-3 px-2 py-2">
-              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+              <div className="w-9 h-9 rounded-full bg-[#CAEA3C] text-neutral-900 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                 {userInitial}
               </div>
               <div className="flex flex-col min-w-0">
@@ -239,7 +203,7 @@ const UserDashboardLayout = () => {
               }`}
               title="Sign Out"
             >
-              <LogOut className="w-4 h-4 flex-shrink-0" />
+              <LogOut className="w-4 h-4 shrink-0" />
               {!collapsed && <span>Sign Out</span>}
             </button>
           </div>
@@ -264,7 +228,7 @@ const UserDashboardLayout = () => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
         {/* Sticky Top Header Bar */}
-        <header className="h-16 flex-shrink-0 bg-white/95 dark:bg-[#151a23]/95 backdrop-blur-md border-b border-neutral-200 dark:border-white/5 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors">
+        <header className="h-16 shrink-0 bg-white/95 dark:bg-[#151a23]/95 backdrop-blur-md border-b border-neutral-200 dark:border-white/5 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors">
           {/* Left section: mobile hamburger & portal badge */}
           <div className="flex items-center gap-3">
             <button

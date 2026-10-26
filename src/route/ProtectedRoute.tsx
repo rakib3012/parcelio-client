@@ -1,55 +1,51 @@
-import { useEffect } from "react"
-import { Navigate, Outlet, useLocation } from "react-router"
-import { Loader2 } from "lucide-react"
-import { useAuthStore } from "@/lib/store/authStore"
-import { useGetProfile } from "@/lib/hooks/api/auth/getProfile"
-import Cookies from "js-cookie"
+import { useEffect } from "react";
+import { Navigate, Outlet } from "react-router";
+import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useGetUser} from "@/lib/hooks/api/auth/getUser";
+import Cookies from "js-cookie";
 
 export const ProtectedRoute = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const login = useAuthStore((state) => state.login)
-  const logout = useAuthStore((state) => state.logout)
-  const currentLocation = useLocation()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const login = useAuthStore((state) => state.login);
+  const logout = useAuthStore((state) => state.logout);
 
   const token =
     Cookies.get("accessToken") ||
-    (typeof window !== "undefined" ? localStorage.getItem("accessToken") : "") ||
-    ""
+    (typeof window !== "undefined"
+      ? localStorage.getItem("accessToken")
+      : "") ||
+    "";
 
-  // If token exists in cookies/storage but store isn't populated, rehydrate from profile API
-  const shouldFetchProfile = !isAuthenticated && !!token
-  const { data, isLoading, isError } = useGetProfile(shouldFetchProfile ? token : undefined)
+  // If token exists in cookies/storage but store isn't populated, rehydrate from user API
+  const shouldFetchUser = !isAuthenticated && !!token;
+  const { data, isLoading, isError } = useGetUser(
+    shouldFetchUser ? token : undefined,
+  );
 
   useEffect(() => {
-    if (data?.data?.userProfile) {
-      login(data.data.userProfile)
+    if (data?.data?.user) {
+      login(data.data.user);
     }
-  }, [data, login])
+  }, [data, login]);
 
   useEffect(() => {
     if (isError) {
-      logout()
+      logout();
     }
-  }, [isError, logout])
+  }, [isError, logout]);
 
   // If authenticated directly from store, render immediately
   if (isAuthenticated) {
-    return <Outlet />
+    return <Outlet />;
   }
 
-  // If no token exists at all, redirect to login
   if (!token) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-        state={{ redirectedFromLocation: currentLocation }}
-      />
-    )
+    return <Navigate to="/login" replace />;
   }
 
   // If verifying token, show loading state
-  if (isLoading || shouldFetchProfile) {
+  if (isLoading || shouldFetchUser) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-50">
         <div className="flex flex-col items-center gap-3">
@@ -59,18 +55,12 @@ export const ProtectedRoute = () => {
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   if (isError) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-        state={{ redirectedFromLocation: currentLocation }}
-      />
-    )
+    return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />
-}
+  return <Outlet />;
+};

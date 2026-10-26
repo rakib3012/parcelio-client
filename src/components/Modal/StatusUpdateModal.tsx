@@ -14,6 +14,9 @@ interface StatusUpdateModalProps {
 }
 
 export function StatusUpdateModal({ booking, onClose }: StatusUpdateModalProps) {
+
+  console.log("modal>>>>>", booking);
+  
   const updateMutation = useUpdateBookingStatus();
   const [newStatus, setNewStatus] = useState(booking.status);
   const [newPaymentStatus, setNewPaymentStatus] = useState(booking.paymentStatus);
@@ -35,8 +38,8 @@ export function StatusUpdateModal({ booking, onClose }: StatusUpdateModalProps) 
 
     const token = Cookies.get("accessToken");
 
-    const payload: UpdateBookingStatusPayload & { id: string } = {
-      id: booking.identifier,
+    const payload: UpdateBookingStatusPayload = {
+      id: booking._id,
       status: newStatus,
       paymentStatus:
         newPaymentStatus !== booking.paymentStatus ? newPaymentStatus : undefined,

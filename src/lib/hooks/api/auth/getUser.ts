@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import type { UserProfile } from "@/lib/types/auth";
+import type { User } from "@/lib/types/auth";
 import Cookies from "js-cookie";
 
 // ── Request & Response types ────────────────────────────────────
-export interface GetProfileResponse {
+export interface GetUserResponse {
   success: boolean;
   message: string;
   data: {
-    userProfile: UserProfile;
+    user: User;
   };
 }
 
@@ -17,7 +17,7 @@ interface ApiError {
 }
 
 // ── Fetch function ──────────────────────────────────────────────
-export const getProfile = async (token?: string): Promise<GetProfileResponse> => {
+export const getUser = async (token?: string): Promise<GetUserResponse> => {
   const authToken =
     token ||
     Cookies.get("accessToken") ||
@@ -29,7 +29,7 @@ export const getProfile = async (token?: string): Promise<GetProfileResponse> =>
   }
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_BASE_URL}/auth/profile`,
+    `${import.meta.env.VITE_API_BASE_URL}/auth/user`,
     {
       method: "GET",
       headers: {
@@ -43,23 +43,18 @@ export const getProfile = async (token?: string): Promise<GetProfileResponse> =>
 
   if (!response.ok) {
     const error = result as ApiError;
-    throw new Error(error.message || "Failed to fetch profile");
+    throw new Error(error.message || "Failed to fetch user");
   }
 
-  return result as GetProfileResponse;
+  return result as GetUserResponse;
 };
 
 // ── Hook ────────────────────────────────────────────────────────
-export const useGetProfile = (token?: string) => {
-  const activeToken =
-    token ||
-    Cookies.get("accessToken") ||
-    (typeof window !== "undefined" ? localStorage.getItem("accessToken") : "");
-
-  return useQuery<GetProfileResponse, Error>({
-    queryKey: ["auth-profile", activeToken],
-    queryFn: () => getProfile(activeToken || undefined),
-    enabled: !!activeToken,
+export const useGetUser = (token?: string) => {
+  return useQuery<GetUserResponse, Error>({
+    queryKey: ["auth-user", token],
+    queryFn: () => getUser(token),
+    enabled: !!token,
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes cache
   });

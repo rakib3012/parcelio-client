@@ -116,13 +116,13 @@ const SignupPage = () => {
         localStorage.setItem("accessToken", data.data.token)
 
         // Update Zustand auth store
-        login(data.data.userProfile)
+        login(data.data.user)
 
         // Navigate to appropriate dashboard
         const roleDestination =
-          data.data.userProfile.role === "admin"
+          data.data.user.role === "admin"
             ? "/admin"
-            : data.data.userProfile.role === "rider"
+            : data.data.user.role === "rider"
             ? "/rider"
             : "/user_dashboard"
         navigate(roleDestination, { replace: true })

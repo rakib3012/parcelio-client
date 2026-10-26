@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import type { UserProfile } from "@/lib/types/auth";
+import type { User } from "@/lib/types/auth";
 
 // ── Request & Response types ────────────────────────────────────
 interface RegisterData {
@@ -13,7 +13,7 @@ interface RegisterResponse {
   success: boolean;
   message: string;
   data: {
-    userProfile: UserProfile;
+    user: User;
     token: string;
   };
 }

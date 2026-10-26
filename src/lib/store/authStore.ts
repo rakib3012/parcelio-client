@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import type { AuthenticationState, UserProfile } from "@/lib/types/auth"
+import type { AuthenticationState, User } from "@/lib/types/auth"
 import Cookies from "js-cookie"
 
 export const useAuthStore = create<AuthenticationState>()(
@@ -8,10 +8,10 @@ export const useAuthStore = create<AuthenticationState>()(
     (set) => ({
       isAuthenticated: false,
       currentUser: null,
-      login: (userProfile: UserProfile) => {
+      login: (user: User) => {
         set({
           isAuthenticated: true,
-          currentUser: userProfile,
+          currentUser: user,
         })
       },
       logout: () => {
