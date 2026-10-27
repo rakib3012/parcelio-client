@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router"
 import {
   MapPin,
@@ -126,7 +126,7 @@ export default function CoveragePage() {
   const [warehouses, setWarehouses] = useState<WarehouseLocation[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [searchQuery, setSearchQuery] = useState<string>("")
-  const [selectedDivision, setSelectedDivision] = useState<string>("All")
+  const [selectedDivision, setSelectedDivision] = useState<string>("Dhaka")
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
   const [modalLocation, setModalLocation] = useState<WarehouseLocation | null>(null)
 
@@ -157,35 +157,39 @@ export default function CoveragePage() {
     }
   }, [])
 
-  // List of unique divisions
-  const divisionList = useMemo(() => {
-    const unique = Array.from(new Set(warehouses.map((w) => w.region))).filter(Boolean)
-    return ["All", ...unique]
-  }, [warehouses])
+  // 1. Shob warehouse theke unique division-er list toiri kora
+  const allRegions = warehouses.map((item) => item.region)
+  const uniqueDivisions = Array.from(new Set(allRegions)).filter(Boolean)
+  const divisionList = ["All", ...uniqueDivisions]
 
-  // Filtered warehouses
-  const filteredWarehouses = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase()
-    return warehouses.filter((item) => {
-      // Division filter
-      const matchesDivision =
-        selectedDivision === "All" ||
-        item.region.toLowerCase() === selectedDivision.toLowerCase()
+  // 2. Search ebong selected division onujayi warehouse filter kora
+  const cleanSearchQuery = searchQuery.trim().toLowerCase()
 
-      if (!matchesDivision) return false
+  const filteredWarehouses = warehouses.filter((item) => {
+    // Division filter check kora
+    const matchesDivision =
+      selectedDivision === "All" ||
+      item.region.toLowerCase() === selectedDivision.toLowerCase()
 
-      if (!q) return true
+    if (!matchesDivision) {
+      return false
+    }
 
-      const districtMatch = item.district.toLowerCase().includes(q)
-      const cityMatch = item.city.toLowerCase().includes(q)
-      const regionMatch = item.region.toLowerCase().includes(q)
-      const areaMatch = item.covered_area?.some((area) =>
-        area.toLowerCase().includes(q)
-      )
+    // Search input khali thakle baki shob dekhabe
+    if (!cleanSearchQuery) {
+      return true
+    }
 
-      return districtMatch || cityMatch || regionMatch || areaMatch
-    })
-  }, [warehouses, searchQuery, selectedDivision])
+    // District, city othoba covered area onujayi search match kora
+    const districtMatch = item.district.toLowerCase().includes(cleanSearchQuery)
+    const cityMatch = item.city.toLowerCase().includes(cleanSearchQuery)
+    const regionMatch = item.region.toLowerCase().includes(cleanSearchQuery)
+    const areaMatch = item.covered_area?.some((area) =>
+      area.toLowerCase().includes(cleanSearchQuery)
+    )
+
+    return districtMatch || cityMatch || regionMatch || areaMatch
+  })
 
   // Quick helper to get estimated timeline string
   const getTimelineForDistrict = (district: string, region: string) => {

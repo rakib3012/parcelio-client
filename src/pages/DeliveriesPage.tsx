@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router"
 import { Search, ChevronLeft, ChevronRight, PackageCheck } from "lucide-react"
 
 interface DeliveryRecord {
@@ -219,7 +220,12 @@ const DeliveriesPage = () => {
                     className="hover:bg-neutral-50/70 dark:hover:bg-white/5 transition-colors"
                   >
                     <td className="px-4 py-3 font-semibold text-neutral-900 dark:text-white">
-                      {delivery.trackingCode}
+                      <Link
+                        to={`/user_dashboard/tracking?id=${delivery.trackingCode}`}
+                        className="font-mono text-[#5e7724] dark:text-[#CAEA3C] hover:underline"
+                      >
+                        {delivery.trackingCode}
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-neutral-800 dark:text-neutral-200">
                       {delivery.recipientName}

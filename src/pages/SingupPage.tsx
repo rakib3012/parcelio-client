@@ -1,17 +1,18 @@
-import { useState, useEffect, type ChangeEvent } from "react"
-import { useNavigate, Link } from "react-router"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Loader2, Eye, EyeOff } from "lucide-react"
-import { useAuthStore } from "@/lib/store/authStore"
-import { useRegister } from "@/lib/hooks/api/auth/register"
-import Cookies from "js-cookie"
-import { GoogleIcon } from "@/components/ui/GoogleIcon"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { useState, useEffect, type ChangeEvent } from "react";
+import { useNavigate, Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useRegister } from "@/lib/hooks/api/auth/register";
+import Cookies from "js-cookie";
+import { GoogleIcon } from "@/components/ui/GoogleIcon";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/utils";
+import { getRoleDestination } from "@/lib/utils/roleCheckFunction";
 
 // ---------------------------------------------------------------------------
 // Zod Validation Schema
@@ -30,7 +31,7 @@ const signupSchema = z.object({
   phone: z
     .string()
     .trim()
-    .refine((val) => !val || (val.length === 11), {
+    .refine((val) => !val || val.length === 11, {
       message: "Phone number must be 11 digits",
     })
     .optional(),
@@ -38,18 +39,18 @@ const signupSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters" })
     .max(128, { message: "Password cannot exceed 128 characters" }),
-})
+});
 
-type SignupFormValues = z.infer<typeof signupSchema>
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 const SignupPage = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const currentUser = useAuthStore((state) => state.currentUser)
-  const login = useAuthStore((state) => state.login)
-  const navigate = useNavigate()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -63,72 +64,63 @@ const SignupPage = () => {
       phone: "",
       password: "",
     },
-  })
+  });
 
   // Auto-redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && currentUser) {
-      navigate(
-        currentUser.role === "admin"
-          ? "/admin"
-          : currentUser.role === "rider"
-          ? "/rider"
-          : "/user_dashboard",
-        { replace: true }
-      )
+      navigate(getRoleDestination(currentUser.role), { replace: true });
     }
-  }, [isAuthenticated, currentUser, navigate])
+  }, [isAuthenticated, currentUser, navigate]);
 
   const {
     mutate: registerMutate,
     isPending,
     error: mutationError,
-  } = useRegister()
+  } = useRegister();
 
   const handleAvatarSelection = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setAvatarPreview(previewUrl)
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
     }
-  }
+  };
 
   const onFormSubmit = (values: SignupFormValues) => {
     const registerData: {
-      fullName: string
-      emailAddress: string
-      password: string
-      phone?: string
+      fullName: string;
+      emailAddress: string;
+      password: string;
+      phone?: string;
     } = {
       fullName: values.fullName.trim(),
       emailAddress: values.emailAddress.trim(),
       password: values.password.trim(),
-    }
+    };
 
     if (values.phone && values.phone.trim()) {
-      registerData.phone = values.phone.trim()
+      registerData.phone = values.phone.trim();
     }
 
     registerMutate(registerData, {
       onSuccess: (data) => {
         // Save token to cookie using js-cookie
-        Cookies.set("accessToken", data.data.token, { expires: 7, path: "/", sameSite: "lax" })
-        localStorage.setItem("accessToken", data.data.token)
+        Cookies.set("accessToken", data.data.token, {
+          expires: 7,
+          path: "/",
+          sameSite: "lax",
+        });
+        localStorage.setItem("accessToken", data.data.token);
 
         // Update Zustand auth store
-        login(data.data.user)
+        login(data.data.user);
 
         // Navigate to appropriate dashboard
-        const roleDestination =
-          data.data.user.role === "admin"
-            ? "/admin"
-            : data.data.user.role === "rider"
-            ? "/rider"
-            : "/user_dashboard"
-        navigate(roleDestination, { replace: true })
+        navigate(getRoleDestination(data.data.user.role), { replace: true });
       },
-    })
-  }
+    });
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto my-2 sm:my-6 bg-white dark:bg-[#151a23] rounded-3xl border border-neutral-200/80 dark:border-white/10 shadow-xs overflow-hidden transition-colors">
@@ -202,9 +194,18 @@ const SignupPage = () => {
             )}
 
             {/* Form with React Hook Form + Zod */}
-            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-3" noValidate>
+            <form
+              onSubmit={handleSubmit(onFormSubmit)}
+              className="space-y-3"
+              noValidate
+            >
               <div className="space-y-1">
-                <Label htmlFor="registerName" className="text-neutral-700 dark:text-neutral-200">Name</Label>
+                <Label
+                  htmlFor="registerName"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Name
+                </Label>
                 <Input
                   id="registerName"
                   type="text"
@@ -212,17 +213,25 @@ const SignupPage = () => {
                   {...register("fullName")}
                   className={cn(
                     "h-10 text-sm dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                    errors.fullName && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    errors.fullName &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                   )}
                   disabled={isPending}
                 />
                 {errors.fullName && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.fullName.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.fullName.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="registerEmail" className="text-neutral-700 dark:text-neutral-200">Email</Label>
+                <Label
+                  htmlFor="registerEmail"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Email
+                </Label>
                 <Input
                   id="registerEmail"
                   type="email"
@@ -230,17 +239,25 @@ const SignupPage = () => {
                   {...register("emailAddress")}
                   className={cn(
                     "h-10 text-sm dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                    errors.emailAddress && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    errors.emailAddress &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                   )}
                   disabled={isPending}
                 />
                 {errors.emailAddress && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.emailAddress.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.emailAddress.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="registerPhone" className="text-neutral-700 dark:text-neutral-200">Phone Number</Label>
+                <Label
+                  htmlFor="registerPhone"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Phone Number
+                </Label>
                 <Input
                   id="registerPhone"
                   type="tel"
@@ -248,17 +265,25 @@ const SignupPage = () => {
                   {...register("phone")}
                   className={cn(
                     "h-10 text-sm dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                    errors.phone && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                    errors.phone &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                   )}
                   disabled={isPending}
                 />
                 {errors.phone && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.phone.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.phone.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="registerPassword" className="text-neutral-700 dark:text-neutral-200">Password</Label>
+                <Label
+                  htmlFor="registerPassword"
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="registerPassword"
@@ -267,7 +292,8 @@ const SignupPage = () => {
                     {...register("password")}
                     className={cn(
                       "h-10 text-sm pr-10 dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                      errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      errors.password &&
+                        "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                     )}
                     disabled={isPending}
                   />
@@ -275,7 +301,9 @@ const SignupPage = () => {
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors focus:outline-none cursor-pointer"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4" />
@@ -285,7 +313,9 @@ const SignupPage = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.password.message}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
@@ -343,7 +373,7 @@ const SignupPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;

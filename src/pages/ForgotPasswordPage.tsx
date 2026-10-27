@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { Link } from "react-router"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Loader2, ArrowLeft, Mail, CheckCircle2 } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { useForgotPassword } from "@/lib/hooks/api/auth/forgotPassword"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Loader2, ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useForgotPassword } from "@/lib/hooks/api/auth/forgotPassword";
+import { cn } from "@/lib/utils/utils";
 
 // ---------------------------------------------------------------------------
 // Zod Validation Schema
@@ -19,12 +19,12 @@ const forgotPasswordSchema = z.object({
     .trim()
     .min(1, { message: "Email address is required" })
     .email({ message: "Please provide a valid email address" }),
-})
+});
 
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
+type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPasswordPage = () => {
-  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null)
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const {
     register,
@@ -35,24 +35,24 @@ const ForgotPasswordPage = () => {
     defaultValues: {
       emailAddress: "",
     },
-  })
+  });
 
   const {
     mutate: forgotPasswordMutate,
     isPending,
     error: mutationError,
-  } = useForgotPassword()
+  } = useForgotPassword();
 
   const onFormSubmit = (values: ForgotPasswordFormValues) => {
     forgotPasswordMutate(
       { emailAddress: values.emailAddress },
       {
         onSuccess: () => {
-          setSubmittedEmail(values.emailAddress)
+          setSubmittedEmail(values.emailAddress);
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto my-2 sm:my-6 bg-white dark:bg-[#151a23] rounded-3xl border border-neutral-200/80 dark:border-white/10 shadow-xs overflow-hidden transition-colors">
@@ -85,8 +85,11 @@ const ForgotPasswordPage = () => {
                   </h1>
                   <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 mt-2 leading-relaxed">
                     We have sent password reset instructions to{" "}
-                    <span className="font-semibold text-neutral-900 dark:text-white">{submittedEmail}</span>.
-                    Please check your inbox and follow the link to reset your password.
+                    <span className="font-semibold text-neutral-900 dark:text-white">
+                      {submittedEmail}
+                    </span>
+                    . Please check your inbox and follow the link to reset your
+                    password.
                   </p>
                 </div>
 
@@ -117,7 +120,8 @@ const ForgotPasswordPage = () => {
                     Forgot Password?
                   </h1>
                   <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-medium mt-1.5 leading-relaxed">
-                    No worries! Enter your registered email address and we'll send you instructions to reset your password.
+                    No worries! Enter your registered email address and we'll
+                    send you instructions to reset your password.
                   </p>
                 </div>
 
@@ -132,9 +136,18 @@ const ForgotPasswordPage = () => {
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4" noValidate>
+                <form
+                  onSubmit={handleSubmit(onFormSubmit)}
+                  className="space-y-4"
+                  noValidate
+                >
                   <div className="space-y-1">
-                    <Label htmlFor="forgotEmail" className="text-neutral-700 dark:text-neutral-200">Email Address</Label>
+                    <Label
+                      htmlFor="forgotEmail"
+                      className="text-neutral-700 dark:text-neutral-200"
+                    >
+                      Email Address
+                    </Label>
                     <div className="relative">
                       <Input
                         id="forgotEmail"
@@ -143,14 +156,17 @@ const ForgotPasswordPage = () => {
                         {...register("emailAddress")}
                         className={cn(
                           "h-10 text-sm pl-10 dark:bg-[#10141d] dark:border-white/10 dark:text-white focus-visible:border-[#caea4d] focus-visible:ring-[#caea4d]/40",
-                          errors.emailAddress && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                          errors.emailAddress &&
+                            "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                         )}
                         disabled={isPending}
                       />
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
                     </div>
                     {errors.emailAddress && (
-                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.emailAddress.message}</p>
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                        {errors.emailAddress.message}
+                      </p>
                     )}
                   </div>
 
@@ -200,7 +216,7 @@ const ForgotPasswordPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ForgotPasswordPage
+export default ForgotPasswordPage;

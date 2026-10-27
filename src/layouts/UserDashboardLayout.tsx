@@ -49,7 +49,7 @@ const sidebarLinks: SidebarItem[] = [
     to: "/user_dashboard/tracking",
     end: false,
     icon: MapPin,
-    label: "Track Shipment",
+    label: "Track Order",
   },
 ]
 

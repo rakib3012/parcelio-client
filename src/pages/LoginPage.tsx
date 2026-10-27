@@ -6,14 +6,14 @@ import { z } from "zod";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useLogin } from "@/lib/hooks/api/auth/login";
- 
+
 import Cookies from "js-cookie";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
- 
+import { cn } from "@/lib/utils/utils";
+import { getRoleDestination } from "@/lib/utils/roleCheckFunction";
 
 // ---------------------------------------------------------------------------
 // Zod Validation Schema
@@ -32,15 +32,6 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-// ---------------------------------------------------------------------------
-// Helper to get destination by role (defined outside so it has stable reference)
-// ---------------------------------------------------------------------------
-const getRoleDestination = (role?: string) => {
-  if (role === "admin") return "/admin";
-  if (role === "rider") return "/rider";
-  return "/user_dashboard";
-};
-
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,7 +40,7 @@ const LoginPage = () => {
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
-  // Auto-redirect if already authenticated
+  // Auto-redirect if already authenticated/logged in
   useEffect(() => {
     if (isAuthenticated && currentUser) {
       navigate(getRoleDestination(currentUser.role), { replace: true });
@@ -57,8 +48,7 @@ const LoginPage = () => {
   }, [isAuthenticated, currentUser, navigate]);
 
   // Check token from cookie if not already authenticated
-  const token =
-    Cookies.get("accessToken") ;
+  const token = Cookies.get("accessToken");
   // const shouldFetchUser= !isAuthenticated && !!token;
   // const { data: userData } = useGetUser(
   //   shouldFetchUser? token : undefined,

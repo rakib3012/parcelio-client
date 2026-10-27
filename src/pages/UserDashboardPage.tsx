@@ -423,7 +423,7 @@ const UserDashboardPage = () => {
           </Link>
 
           <Link
-            to="/user_dashboard/deliveries"
+            to="/user_dashboard/tracking"
             className="group bg-white dark:bg-[#1a1f2e]/80 rounded-2xl p-6 border border-neutral-200/80 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/20 shadow-xs hover:shadow-md transition-all flex items-center justify-between"
           >
             <div className="flex items-center gap-4">

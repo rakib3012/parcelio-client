@@ -21,6 +21,7 @@ import CoveragePage from "@/pages/CoveragePage";
 
 // User Pages
 import UserDashboardPage from "@/pages/UserDashboardPage";
+import TrackOderPage from "@/pages/user/TrackOderPage";
 
 // Rider Pages
 import RiderDashboardPage from "@/pages/rider/RiderDashboardPage";
@@ -58,15 +59,10 @@ export const router = createBrowserRouter([
       //   path: "booking",
       //   element: <BookingPage />,
       // },
-      // {
-      //   path: "tracking",
-      //   element: (
-      //     <PlaceholderPage
-      //       pageTitle="Tracking"
-      //       pageDescription="Track your delivery with Parcelio"
-      //     />
-      //   ),
-      // },
+      {
+        path: "tracking",
+        element: <TrackOderPage />,
+      },
       // {
       //   path: "pricing",
       //   element: (
@@ -125,7 +121,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "tracking",
-            element: <NotFoundPage />,
+            element: <TrackOderPage />,
           },
         ],
       },

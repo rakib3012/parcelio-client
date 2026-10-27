@@ -15,8 +15,7 @@ const navigationItems: NavigationItem[] = [
   { label: "Coverage", destinationPath: "/coverage" },
   { label: "About Us", destinationPath: "/about" },
   // { label: "Booking", destinationPath: "/booking" },
-  // { label: "Pricing", destinationPath: "/pricing" },
-  // { label: "Tracking", destinationPath: "/tracking" },
+  { label: "Tracking", destinationPath: "/tracking" },
   { label: "Be a Rider", destinationPath: "/be-a-rider" },
 ]
 

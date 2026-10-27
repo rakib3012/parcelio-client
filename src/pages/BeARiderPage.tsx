@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, useMemo } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,16 +14,16 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { cn } from "@/lib/utils"
-import { useRiderApplication } from "@/lib/hooks/api/rider/apply"
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils/utils";
+import { useRiderApplication } from "@/lib/hooks/api/rider/apply";
 
 interface WarehouseLocation {
-  region: string
-  district: string
-  city: string
-  covered_area: string[]
-  status: string
+  region: string;
+  district: string;
+  city: string;
+  covered_area: string[];
+  status: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -42,22 +42,22 @@ const riderRegistrationSchema = z.object({
   drivingLicense: z
     .string()
     .trim()
-    .min(5, { message: "Driving license number is required (min 5 characters)" })
+    .min(5, {
+      message: "Driving license number is required (min 5 characters)",
+    })
     .max(30, { message: "Driving license cannot exceed 30 characters" }),
 
   email: z
     .string()
     .trim()
     .min(1, { message: "Email address is required" })
-    .email({ message: "Please provide a valid email address (e.g. user@example.com)" }),
+    .email({
+      message: "Please provide a valid email address (e.g. user@example.com)",
+    }),
 
-  region: z
-    .string()
-    .min(1, { message: "Please select your region" }),
+  region: z.string().min(1, { message: "Please select your region" }),
 
-  district: z
-    .string()
-    .min(1, { message: "Please select your district" }),
+  district: z.string().min(1, { message: "Please select your district" }),
 
   nid: z
     .string()
@@ -70,15 +70,18 @@ const riderRegistrationSchema = z.object({
     .string()
     .trim()
     .min(11, { message: "Phone number must be at least 11 digits" })
-    .regex(
-      /^(?:\+?8801|01)[3-9]\d{8}$/,
-      { message: "Please enter a valid Bangladeshi phone number (e.g., 017xxxxxxxx)" }
-    ),
+    .regex(/^(?:\+?8801|01)[3-9]\d{8}$/, {
+      message:
+        "Please enter a valid Bangladeshi phone number (e.g., 017xxxxxxxx)",
+    }),
 
   bikeBrandModelYear: z
     .string()
     .trim()
-    .min(3, { message: "Bike brand, model and year is required (e.g., Honda CB Shine 2021)" })
+    .min(3, {
+      message:
+        "Bike brand, model and year is required (e.g., Honda CB Shine 2021)",
+    })
     .max(80, { message: "Character limit exceeded (max 80 characters)" }),
 
   bikeRegistrationNumber: z
@@ -93,22 +96,23 @@ const riderRegistrationSchema = z.object({
     .max(500, { message: "About yourself must not exceed 500 characters" })
     .optional()
     .or(z.literal("")),
-})
+});
 
 // Extract the TypeScript type directly from the Zod schema
-export type RiderRegistrationFormData = z.infer<typeof riderRegistrationSchema>
+export type RiderRegistrationFormData = z.infer<typeof riderRegistrationSchema>;
 
 const BeARiderPage = () => {
-  const [warehouses, setWarehouses] = useState<WarehouseLocation[]>([])
-  const [availableDistricts, setAvailableDistricts] = useState<string[]>([])
-  const [isSuccessSubmitted, setIsSuccessSubmitted] = useState(false)
-  const [submittedData, setSubmittedData] = useState<RiderRegistrationFormData | null>(null)
+  const [warehouses, setWarehouses] = useState<WarehouseLocation[]>([]);
+  const [availableDistricts, setAvailableDistricts] = useState<string[]>([]);
+  const [isSuccessSubmitted, setIsSuccessSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] =
+    useState<RiderRegistrationFormData | null>(null);
 
   const {
     mutate: submitApplication,
     isPending,
     error: apiError,
-  } = useRiderApplication()
+  } = useRiderApplication();
 
   // -------------------------------------------------------------------------
   // 2. Initializing React Hook Form with Zod Resolver
@@ -139,52 +143,54 @@ const BeARiderPage = () => {
       bikeRegistrationNumber: "",
       aboutYourself: "",
     },
-  })
+  });
 
   // Watch the selected region to filter districts dynamically
-  const selectedRegion = watch("region")
+  const selectedRegion = watch("region");
 
   // Load warehouse regions and districts from public/assets/warehouses.json
   useEffect(() => {
     fetch("/assets/warehouses.json")
       .then((res) => res.json())
       .then((data: WarehouseLocation[]) => {
-        setWarehouses(data)
+        setWarehouses(data);
       })
       .catch((error) => {
-        console.error("Failed to load warehouses data:", error)
-      })
-  }, [])
+        console.error("Failed to load warehouses data:", error);
+      });
+  }, []);
 
   // Extract unique regions
-  const uniqueRegions = Array.from(new Set(warehouses.map((w) => w.region))).filter(Boolean)
+  const uniqueRegions = Array.from(
+    new Set(warehouses.map((w) => w.region)),
+  ).filter(Boolean);
 
   // Items map for Base UI Select value-to-label resolution (as in shadcn base-ui Select)
   const regionItems = useMemo(
     () => Object.fromEntries(uniqueRegions.map((r) => [r, r])),
-    [uniqueRegions]
-  )
+    [uniqueRegions],
+  );
   const districtItems = useMemo(
     () => Object.fromEntries(availableDistricts.map((d) => [d, d])),
-    [availableDistricts]
-  )
+    [availableDistricts],
+  );
 
   // Update available districts when selectedRegion changes
   useEffect(() => {
     if (!selectedRegion) {
-      setAvailableDistricts([])
-      setValue("district", "")
-      return
+      setAvailableDistricts([]);
+      setValue("district", "");
+      return;
     }
 
     const filtered = warehouses
       .filter((w) => w.region.toLowerCase() === selectedRegion.toLowerCase())
-      .map((w) => w.district)
+      .map((w) => w.district);
 
-    const uniqueFiltered = Array.from(new Set(filtered))
-    setAvailableDistricts(uniqueFiltered)
-    setValue("district", "")
-  }, [selectedRegion, warehouses, setValue])
+    const uniqueFiltered = Array.from(new Set(filtered));
+    setAvailableDistricts(uniqueFiltered);
+    setValue("district", "");
+  }, [selectedRegion, warehouses, setValue]);
 
   // Form submission handler called ONLY when all Zod validations pass
   const onRiderFormSubmit = (data: RiderRegistrationFormData) => {
@@ -204,13 +210,13 @@ const BeARiderPage = () => {
       },
       {
         onSuccess: () => {
-          setIsSuccessSubmitted(true)
-          setSubmittedData(data)
-          reset() 
+          setIsSuccessSubmitted(true);
+          setSubmittedData(data);
+          reset();
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   return (
     <div className="w-full py-6 sm:py-10">
@@ -221,8 +227,9 @@ const BeARiderPage = () => {
             Be a Rider
           </h1>
           <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-2xl leading-relaxed">
-            Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From
-            personal packages to business shipments — we deliver on time, every time.
+            Enjoy fast, reliable parcel delivery with real-time tracking and
+            zero hassle. From personal packages to business shipments — we
+            deliver on time, every time.
           </p>
         </header>
 
@@ -237,7 +244,9 @@ const BeARiderPage = () => {
         {apiError && !isSuccessSubmitted && (
           <div className="mt-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-2xl flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700 dark:text-red-300">{apiError.message}</p>
+            <p className="text-sm text-red-700 dark:text-red-300">
+              {apiError.message}
+            </p>
           </div>
         )}
 
@@ -250,8 +259,20 @@ const BeARiderPage = () => {
                 Application Submitted Successfully!
               </h3>
               <p className="text-xs text-teal-800 dark:text-neutral-300 leading-relaxed">
-                Thank you, <span className="font-semibold text-teal-950 dark:text-lime-400">{submittedData.name}</span>. We have received your rider application for{" "}
-                <span className="font-semibold text-teal-950 dark:text-white">{submittedData.district}, {submittedData.region}</span>. Our recruitment coordinator will verify your NID and Driving License and contact you via phone (<span className="font-semibold text-teal-950 dark:text-white">{submittedData.phone}</span>) within 24 hours.
+                Thank you,{" "}
+                <span className="font-semibold text-teal-950 dark:text-lime-400">
+                  {submittedData.name}
+                </span>
+                . We have received your rider application for{" "}
+                <span className="font-semibold text-teal-950 dark:text-white">
+                  {submittedData.district}, {submittedData.region}
+                </span>
+                . Our recruitment coordinator will verify your NID and Driving
+                License and contact you via phone (
+                <span className="font-semibold text-teal-950 dark:text-white">
+                  {submittedData.phone}
+                </span>
+                ) within 24 hours.
               </p>
               <Button
                 type="button"
@@ -277,7 +298,12 @@ const BeARiderPage = () => {
             >
               {/* 1. Your Name */}
               <div className="space-y-1.5">
-                <Label htmlFor="name" className="text-teal-950 dark:text-neutral-200">Your Name</Label>
+                <Label
+                  htmlFor="name"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Your Name
+                </Label>
                 <Input
                   id="name"
                   type="text"
@@ -286,7 +312,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.name ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.name ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.name
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.name && (
@@ -299,7 +327,12 @@ const BeARiderPage = () => {
 
               {/* 2. Driving License Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="drivingLicense" className="text-teal-950 dark:text-neutral-200">Driving License Number</Label>
+                <Label
+                  htmlFor="drivingLicense"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Driving License Number
+                </Label>
                 <Input
                   id="drivingLicense"
                   type="text"
@@ -308,7 +341,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.drivingLicense ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.drivingLicense ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.drivingLicense
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.drivingLicense && (
@@ -321,7 +356,12 @@ const BeARiderPage = () => {
 
               {/* 3. Your Email */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-teal-950 dark:text-neutral-200">Your Email</Label>
+                <Label
+                  htmlFor="email"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Your Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -330,7 +370,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.email ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.email ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.email
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.email && (
@@ -343,7 +385,12 @@ const BeARiderPage = () => {
 
               {/* 4. Your Region */}
               <div className="space-y-1.5">
-                <Label htmlFor="region" className="text-teal-950 dark:text-neutral-200">Your Region</Label>
+                <Label
+                  htmlFor="region"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Your Region
+                </Label>
                 <Controller
                   name="region"
                   control={control}
@@ -352,14 +399,15 @@ const BeARiderPage = () => {
                       items={regionItems}
                       value={field.value || null}
                       onValueChange={(val) => {
-                        field.onChange(val || "")
+                        field.onChange(val || "");
                       }}
                     >
                       <SelectTrigger
                         id="region"
                         className={cn(
                           "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
-                          errors.region && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                          errors.region &&
+                            "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                         )}
                         aria-invalid={errors.region ? "true" : "false"}
                       >
@@ -388,7 +436,12 @@ const BeARiderPage = () => {
 
               {/* 5. Your District */}
               <div className="space-y-1.5">
-                <Label htmlFor="district" className="text-teal-950 dark:text-neutral-200">Your District</Label>
+                <Label
+                  htmlFor="district"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Your District
+                </Label>
                 <Controller
                   name="district"
                   control={control}
@@ -396,20 +449,25 @@ const BeARiderPage = () => {
                     <Select
                       items={districtItems}
                       value={field.value || null}
-                      disabled={!selectedRegion || availableDistricts.length === 0}
+                      disabled={
+                        !selectedRegion || availableDistricts.length === 0
+                      }
                       onValueChange={(val) => field.onChange(val || "")}
                     >
                       <SelectTrigger
                         id="district"
                         className={cn(
                           "w-full h-11 bg-white dark:bg-[#10141d] border-neutral-300 dark:border-white/10 dark:text-white text-sm px-3.5",
-                          errors.district && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                          errors.district &&
+                            "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200",
                         )}
                         aria-invalid={errors.district ? "true" : "false"}
                       >
                         <SelectValue
                           placeholder={
-                            selectedRegion ? "Select your District" : "Select Region First"
+                            selectedRegion
+                              ? "Select your District"
+                              : "Select Region First"
                           }
                         />
                       </SelectTrigger>
@@ -436,7 +494,12 @@ const BeARiderPage = () => {
 
               {/* 6. NID No */}
               <div className="space-y-1.5">
-                <Label htmlFor="nid" className="text-teal-950 dark:text-neutral-200">NID No</Label>
+                <Label
+                  htmlFor="nid"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  NID No
+                </Label>
                 <Input
                   id="nid"
                   type="text"
@@ -445,7 +508,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.nid ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.nid ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.nid
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.nid && (
@@ -458,7 +523,12 @@ const BeARiderPage = () => {
 
               {/* 7. Phone Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="phone" className="text-teal-950 dark:text-neutral-200">Phone Number</Label>
+                <Label
+                  htmlFor="phone"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Phone Number
+                </Label>
                 <Input
                   id="phone"
                   type="tel"
@@ -467,7 +537,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.phone ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.phone ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.phone
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.phone && (
@@ -480,7 +552,12 @@ const BeARiderPage = () => {
 
               {/* 8. Bike Brand Model and Year */}
               <div className="space-y-1.5">
-                <Label htmlFor="bikeBrandModelYear" className="text-teal-950 dark:text-neutral-200">Bike Brand Model and Year</Label>
+                <Label
+                  htmlFor="bikeBrandModelYear"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Bike Brand Model and Year
+                </Label>
                 <Input
                   id="bikeBrandModelYear"
                   type="text"
@@ -489,7 +566,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.bikeBrandModelYear ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.bikeBrandModelYear ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.bikeBrandModelYear
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.bikeBrandModelYear && (
@@ -502,16 +581,25 @@ const BeARiderPage = () => {
 
               {/* 9. Bike Registration Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="bikeRegistrationNumber" className="text-teal-950 dark:text-neutral-200">Bike Registration Number</Label>
+                <Label
+                  htmlFor="bikeRegistrationNumber"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Bike Registration Number
+                </Label>
                 <Input
                   id="bikeRegistrationNumber"
                   type="text"
                   placeholder="Bike Registration Number"
                   {...register("bikeRegistrationNumber")}
-                  aria-invalid={errors.bikeRegistrationNumber ? "true" : "false"}
+                  aria-invalid={
+                    errors.bikeRegistrationNumber ? "true" : "false"
+                  }
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.bikeRegistrationNumber ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.bikeRegistrationNumber
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.bikeRegistrationNumber && (
@@ -524,7 +612,12 @@ const BeARiderPage = () => {
 
               {/* 10. Tell Us About Yourself */}
               <div className="space-y-1.5">
-                <Label htmlFor="aboutYourself" className="text-teal-950 dark:text-neutral-200">Tell Us About Yourself</Label>
+                <Label
+                  htmlFor="aboutYourself"
+                  className="text-teal-950 dark:text-neutral-200"
+                >
+                  Tell Us About Yourself
+                </Label>
                 <Input
                   id="aboutYourself"
                   type="text"
@@ -533,7 +626,9 @@ const BeARiderPage = () => {
                   aria-invalid={errors.aboutYourself ? "true" : "false"}
                   className={cn(
                     "h-11 dark:bg-[#10141d] dark:border-white/10 dark:text-white",
-                    errors.aboutYourself ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200" : ""
+                    errors.aboutYourself
+                      ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-200"
+                      : "",
                   )}
                 />
                 {errors.aboutYourself && (
@@ -575,7 +670,7 @@ const BeARiderPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BeARiderPage
+export default BeARiderPage;
