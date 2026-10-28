@@ -15,6 +15,8 @@ export interface StatusHistoryItem {
   status: BookingStatus;
   timestamp: string | Date;
   note?: string;
+  updatedBy?: string | { _id: string; fullName: string };
+  updatedByRole?: "user" | "operator" | "rider" | "admin";
 }
 
 export interface BookingDetail {
@@ -46,7 +48,12 @@ export interface BookingDetail {
   status: BookingStatus;
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
-  riderId?: string;
+  operatorId?: string | { _id: string; fullName: string; phone?: string; emailAddress?: string };
+  riderId?: string | { _id: string; fullName: string; phone?: string; emailAddress?: string };
+  assignedAt?: string;
+  deliveredAt?: string;
+  cancelledAt?: string;
+  cancellationReason?: string;
   statusHistory: StatusHistoryItem[];
   createdAt: string;
   updatedAt: string;

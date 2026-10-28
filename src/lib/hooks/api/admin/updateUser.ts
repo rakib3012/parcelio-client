@@ -6,7 +6,7 @@ export interface AdminUser {
   fullName: string;
   emailAddress: string;
   phone: string;
-  role: "user" | "rider" | "admin";
+  role: "user" | "rider" | "admin" | "operator";
   createdAt: string;
   updatedAt: string;
 }
@@ -17,7 +17,7 @@ export interface UpdateUserData {
   emailAddress?: string;
   password?: string;
   phone?: string;
-  role?: "user" | "rider" | "admin";
+  role?: "user" | "rider" | "admin" | "operator";
   token?: string;
 }
 

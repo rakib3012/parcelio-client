@@ -1,5 +1,5 @@
 import React from "react";
-import { UserCheck, Bike, ShieldCheck } from "lucide-react";
+import { UserCheck, Bike, ShieldCheck, Headset } from "lucide-react";
 
 interface RoleBadgeProps {
   role: string;
@@ -23,6 +23,11 @@ export function RoleBadge({ role }: RoleBadgeProps) {
       bg: "bg-amber-50 dark:bg-amber-950/40 border-amber-100 dark:border-amber-900/50",
       text: "text-amber-700 dark:text-amber-400",
       icon: Bike,
+    },
+    operator: {
+      bg: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/50",
+      text: "text-emerald-700 dark:text-emerald-400",
+      icon: Headset,
     },
     admin: {
       bg: "bg-purple-50 dark:bg-purple-950/40 border-purple-100 dark:border-purple-900/50",

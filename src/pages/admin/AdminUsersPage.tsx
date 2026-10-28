@@ -36,6 +36,7 @@ const roleItems: Record<string, string> = {
   user: "User",
   rider: "Rider",
   admin: "Admin",
+  operator: "Operator",
 };
 
 // ── Main Page ──────────────────────────────────────────────────
@@ -139,7 +140,7 @@ const AdminUsersPage = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <input
               type="text"
-              placeholder="Search by name, email, or phone..."
+              placeholder="Search by id, name, email, or phone..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 dark:border-white/10 bg-neutral-50 dark:bg-[#10141d] text-neutral-900 dark:text-white placeholder:text-neutral-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#CAEA3C]/50 focus:border-[#CAEA3C] transition-all"
@@ -164,6 +165,7 @@ const AdminUsersPage = () => {
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="rider">Rider</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="operator">Operator</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -200,7 +202,10 @@ const AdminUsersPage = () => {
                 <thead>
                   <tr className="border-b border-neutral-100 dark:border-white/10 bg-neutral-50/50 dark:bg-[#10141d]/50">
                     <th className="text-left text-xs font-semibold text-neutral-400 uppercase tracking-wider px-6 py-4">
-                      User
+                      User Name
+                    </th>
+                    <th className="text-left text-xs font-semibold text-neutral-400 uppercase tracking-wider px-6 py-4">
+                      User ID
                     </th>
                     <th className="text-left text-xs font-semibold text-neutral-400 uppercase tracking-wider px-6 py-4">
                       Email
@@ -234,6 +239,11 @@ const AdminUsersPage = () => {
                             {user.fullName}
                           </span>
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-neutral-600 dark:text-neutral-300">
+                          {user._id}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-sm text-neutral-600 dark:text-neutral-300">

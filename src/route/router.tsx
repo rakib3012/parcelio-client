@@ -31,7 +31,15 @@ import RiderEarningsPage from "@/pages/rider/RiderEarningsPage";
 // Admin Pages
 import AdminOverviewPage from "@/pages/admin/AdminOverviewPage";
 import AdminUsersPage from "@/pages/admin/AdminUsersPage";
+import AdminOperatorsPage from "@/pages/admin/AdminOperatorsPage";
 import AdminBookingsPage from "@/pages/admin/AdminBookingsPage";
+import { OperatorRouter } from "./OperatorRoute";
+import OperatorLayout from "@/layouts/OperatorLayout";
+import OperatorDashboardPage from "@/pages/operator/OperatorDashboardPage";
+import OperatorBookingsPage from "@/pages/operator/OperatorBookingsPage";
+import OperatorBulkAssignPage from "@/pages/operator/OperatorBulkAssignPage";
+import OperatorRidersPage from "@/pages/operator/OperatorRidersPage";
+import ParcelDeliveries from "@/pages/rider/ParcelDeliveries";
 
 export const router = createBrowserRouter([
   // Public Routes (Wrapped in RootLayout with ZapShift Navbar)
@@ -128,6 +136,44 @@ export const router = createBrowserRouter([
     ],
   },
 
+
+// Operator Protected Routes (Guarded by OperatorRouter and styled in OperatorLayout)
+  {
+    path: "/operator",
+    element: <OperatorRouter />,
+    children: [
+      {
+        element: <OperatorLayout />,
+        children: [
+          {
+            index: true,
+            element: <OperatorDashboardPage />,
+          },
+          {
+            path: "booking",
+            element: <BookingPage />,
+          },
+          {
+            path: "bulk-assign",
+            element: <OperatorBulkAssignPage />,
+          },
+          {
+            path: "bookings",
+            element: <OperatorBookingsPage />,
+          },
+          {
+            path: "riders",
+            element: <OperatorRidersPage />,
+          },
+          {
+            path: "tracking",
+            element: <TrackOderPage />,
+          },
+        ],
+      },
+    ],
+  },
+
   // Rider Protected Routes (Guarded by RiderRoute and styled in RiderLayout)
   {
     path: "/rider",
@@ -141,8 +187,12 @@ export const router = createBrowserRouter([
             element: <RiderDashboardPage />,
           },
           {
-            path: "deliveries",
+            path: "assigned_deliveries",
             element: <RiderDeliveriesPage />,
+          },
+          {
+            path: "deliveries",
+            element: <ParcelDeliveries />,
           },
           {
             path: "earnings",
@@ -168,6 +218,10 @@ export const router = createBrowserRouter([
           {
             path: "users",
             element: <AdminUsersPage />,
+          },
+          {
+            path: "operators",
+            element: <AdminOperatorsPage />,
           },
           {
             path: "bookings",

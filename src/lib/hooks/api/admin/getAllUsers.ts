@@ -7,7 +7,7 @@ export interface AdminUser {
   fullName: string;
   emailAddress: string;
   phone: string;
-  role: "user" | "rider" | "admin";
+  role: "user" | "rider" | "admin" | "operator";
   createdAt: string;
   updatedAt: string;
 }
@@ -15,6 +15,7 @@ export interface AdminUser {
 export interface GetAllUsersParams {
   page?: number;
   limit?: number;
+  id?: string;
   role?: string;
   search?: string;
   token?: string;
@@ -65,6 +66,7 @@ export const getAllUsers = async (
   const searchParams = new URLSearchParams();
   if (params?.page) searchParams.set("page", String(params.page));
   if (params?.limit) searchParams.set("limit", String(params.limit));
+  if (params?.id) searchParams.set("id", params.id);
   if (params?.role) searchParams.set("role", params.role);
   if (params?.search) searchParams.set("search", params.search);
 

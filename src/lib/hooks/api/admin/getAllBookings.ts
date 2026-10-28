@@ -10,12 +10,7 @@ export interface AdminBooking {
   _id: string;
   identifier: string;
   trackingId: string;
-  userId: {
-    identifier: string;
-    fullName: string;
-    emailAddress: string;
-    phone: string;
-  } | null;
+  userId?: string | { _id: string; fullName: string; phone?: string; emailAddress?: string } | null;
   parcelType: "document" | "not-document";
   parcelName: string;
   parcelWeight: number;
@@ -34,10 +29,17 @@ export interface AdminBooking {
   paymentStatus: "pending" | "paid" | "cancelled";
   paymentMethod: string;
   riderId: string | null;
+  operatorId?: string | { _id: string; fullName: string; phone?: string; emailAddress?: string } | null;
+  assignedAt?: string | null;
+  deliveredAt?: string | null;
+  cancelledAt?: string | null;
+  cancellationReason?: string | null;
   statusHistory: {
     status: string;
     timestamp: string;
     note: string;
+    updatedBy?: string | null;
+    updatedByRole?: "user" | "operator" | "rider" | "admin" | null;
   }[];
   createdAt: string;
   updatedAt: string;
@@ -64,6 +66,7 @@ export interface FetchAllBookingsParams {
   limit?: number;
   status?: string;
   district?: string;
+  search?: string;
   token?: string;
 }
 
@@ -75,6 +78,7 @@ export const fetchAllBookings = async (
   if (params.limit) searchParams.set("limit", String(params.limit));
   if (params.status) searchParams.set("status", params.status);
   if (params.district) searchParams.set("district", params.district);
+  if (params.search) searchParams.set("search", params.search);
 
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/bookings?${searchParams.toString()}`,

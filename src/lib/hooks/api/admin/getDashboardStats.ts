@@ -11,6 +11,7 @@ export interface DashboardStats {
     total: number;
     customers: number;
     riders: number;
+    operators?: number;
     admins: number;
   };
   bookings: {

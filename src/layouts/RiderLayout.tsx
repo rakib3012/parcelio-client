@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   Shield,
   CircleDot,
+  Truck,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import Cookies from "js-cookie"
@@ -34,10 +35,17 @@ const riderSidebarLinks: SidebarItem[] = [
     label: "Rider Overview",
   },
   {
-    to: "/rider/deliveries",
+    to: "/rider/assigned_deliveries",
     end: false,
     icon: Package,
     label: "Assigned Deliveries",
+    badge: "Queue",
+  },
+  {
+    to: "/rider/deliveries",
+    end: false,
+    icon: Truck,
+    label: "Deliveries",
     badge: "Active",
   },
   {

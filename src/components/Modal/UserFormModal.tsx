@@ -8,6 +8,7 @@ import {
   UserCheck,
   Bike,
   ShieldCheck,
+  Headset,
 } from "lucide-react";
 import Cookies from "js-cookie";
 import type { AdminUser } from "@/lib/hooks/api/admin/getAllUsers";
@@ -20,8 +21,11 @@ import {
   type UpdateUserData as UpdateUserPayload,
 } from "@/lib/hooks/api/admin/updateUser";
 
+type UserRole = "user" | "rider" | "admin" | "operator";
+
 interface UserFormModalProps {
   user: AdminUser | null;
+  defaultRole?: UserRole;
   onClose: () => void;
   createMutation: ReturnType<typeof useCreateUser>;
   updateMutation: ReturnType<typeof useUpdateUser>;
@@ -29,6 +33,7 @@ interface UserFormModalProps {
 
 export function UserFormModal({
   user,
+  defaultRole,
   onClose,
   createMutation,
   updateMutation,
@@ -40,7 +45,7 @@ export function UserFormModal({
     emailAddress: user?.emailAddress ?? "",
     password: "",
     phone: user?.phone ?? "",
-    role: user?.role ?? "user",
+    role: user?.role ?? defaultRole ?? "user",
   });
   const [error, setError] = useState("");
 
@@ -78,7 +83,7 @@ export function UserFormModal({
         fullName: formData.fullName,
         emailAddress: formData.emailAddress,
         phone: formData.phone,
-        role: formData.role as "user" | "rider" | "admin",
+        role: formData.role as UserRole,
         token,
       };
       if (formData.password) {
@@ -94,7 +99,7 @@ export function UserFormModal({
         emailAddress: formData.emailAddress,
         password: formData.password,
         phone: formData.phone,
-        role: formData.role as "user" | "rider" | "admin",
+        role: formData.role as UserRole,
         token,
       };
       createMutation.mutate(payload, {
@@ -212,8 +217,8 @@ export function UserFormModal({
             <label className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase tracking-wider">
               Role
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              {(["user", "rider", "admin"] as const).map((r) => (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {(["user", "rider", "operator", "admin"] as const).map((r) => (
                 <button
                   key={r}
                   type="button"
@@ -226,6 +231,7 @@ export function UserFormModal({
                 >
                   {r === "user" && <UserCheck className="w-3.5 h-3.5" />}
                   {r === "rider" && <Bike className="w-3.5 h-3.5" />}
+                  {r === "operator" && <Headset className="w-3.5 h-3.5" />}
                   {r === "admin" && <ShieldCheck className="w-3.5 h-3.5" />}
                   {r.charAt(0).toUpperCase() + r.slice(1)}
                 </button>

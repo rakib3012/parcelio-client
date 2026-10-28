@@ -364,18 +364,30 @@ export default function BookingPage() {
               {/* Actions */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
                 <Link
-                  to={`/user_dashboard/tracking?id=${confirmedBooking.trackingId}`}
+                  to={
+                    currentUser?.role === "operator"
+                      ? `/operator/tracking?id=${confirmedBooking.trackingId}`
+                      : `/user_dashboard/tracking?id=${confirmedBooking.trackingId}`
+                  }
                   className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#CAEA3C] hover:bg-[#b8d82d] text-neutral-950 text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-xs"
                 >
                   <MapPin className="w-4 h-4" />
                   <span>Track This Parcel</span>
                 </Link>
                 <Link
-                  to="/user_dashboard/deliveries"
+                  to={
+                    currentUser?.role === "operator"
+                      ? "/operator/bookings"
+                      : "/user_dashboard/deliveries"
+                  }
                   className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-teal-800 hover:bg-teal-900 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                 >
                   <Truck className="w-4 h-4" />
-                  <span>View All Deliveries</span>
+                  <span>
+                    {currentUser?.role === "operator"
+                      ? "View Hub Bookings"
+                      : "View All Deliveries"}
+                  </span>
                 </Link>
                 <button
                   type="button"

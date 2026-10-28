@@ -9,6 +9,7 @@ import {
   Loader2,
   AlertTriangle,
   ArrowRight,
+  Headset,
 } from "lucide-react"
 import { useAdminDashboardStats } from "@/lib/hooks/api/admin/getDashboardStats"
 import Cookies from "js-cookie"
@@ -62,7 +63,7 @@ const areaChartConfig = {
   },
 } satisfies ChartConfig
 
-const DONUT_COLORS = ["#06b6d4", "#a855f7"]
+const DONUT_COLORS = ["#06b6d4", "#a855f7", "#10b981"]
 
 // ── Sparkline Mini Component ────────────────────────────────────
 function MiniSparkline({
@@ -143,8 +144,9 @@ const AdminOverviewPage = () => {
 
   // Donut data
   const donutData = [
-    { name: "Users", value: stats?.users.customers ?? 3 },
-    { name: "Riders", value: stats?.users.riders ?? 1 },
+    { name: "Users", value: stats?.users.customers ?? 0 },
+    { name: "Riders", value: stats?.users.riders ?? 0 },
+    { name: "Operators", value: stats?.users.operators ?? 0 },
   ]
 
   const donutConfig = {
@@ -155,6 +157,10 @@ const AdminOverviewPage = () => {
     riders: {
       label: "Riders",
       color: "#a855f7",
+    },
+    operators: {
+      label: "Operators",
+      color: "#10b981",
     },
   } satisfies ChartConfig
 
@@ -201,7 +207,14 @@ const AdminOverviewPage = () => {
             Welcome back, {currentUser?.fullName || "Admin"}!
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Link
+            to="/admin/operators"
+            className="inline-flex items-center gap-2 bg-white dark:bg-white/10 text-neutral-700 dark:text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-neutral-50 dark:hover:bg-white/15 transition-colors border border-neutral-200 dark:border-white/10 shadow-xs"
+          >
+            <Headset className="w-4 h-4 text-emerald-500" />
+            Operators
+          </Link>
           <Link
             to="/admin/users"
             className="inline-flex items-center gap-2 bg-white dark:bg-white/10 text-neutral-700 dark:text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-neutral-50 dark:hover:bg-white/15 transition-colors border border-neutral-200 dark:border-white/10 shadow-xs"
@@ -220,7 +233,7 @@ const AdminOverviewPage = () => {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <OverviewStatsCard
           label="Total Users"
           value={stats?.users.total ?? 0}
@@ -228,6 +241,14 @@ const AdminOverviewPage = () => {
           iconColor="bg-blue-50 text-blue-600 dark:bg-blue-500/30 dark:text-blue-300"
           sparkColor="#3b82f6"
           sparkVariant="wave"
+        />
+        <OverviewStatsCard
+          label="Operators"
+          value={stats?.users.operators ?? 0}
+          icon={Headset}
+          iconColor="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/30 dark:text-emerald-300"
+          sparkColor="#10b981"
+          sparkVariant="up"
         />
         <OverviewStatsCard
           label="Pending"
@@ -419,17 +440,23 @@ const AdminOverviewPage = () => {
             </ChartContainer>
 
             {/* Legend */}
-            <div className="flex items-center gap-6 mt-2">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-2">
+              <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-cyan-400" />
                 <span className="text-xs text-neutral-600 dark:text-white/60 font-medium">
                   Users
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-purple-500" />
                 <span className="text-xs text-neutral-600 dark:text-white/60 font-medium">
                   Riders
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                <span className="text-xs text-neutral-600 dark:text-white/60 font-medium">
+                  Operators
                 </span>
               </div>
             </div>
@@ -442,7 +469,7 @@ const AdminOverviewPage = () => {
         <h2 className="text-xs font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest mb-3">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link
             to="/admin/users"
             className="group bg-white dark:bg-[#1a1f2e]/80 rounded-2xl p-6 border border-neutral-200/80 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/20 shadow-xs hover:shadow-md transition-all flex items-center justify-between"
@@ -457,6 +484,26 @@ const AdminOverviewPage = () => {
                 </h3>
                 <p className="text-xs text-neutral-500 dark:text-white/40 mt-0.5">
                   Create, edit, and manage user accounts
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-neutral-400 dark:text-white/30 group-hover:text-neutral-900 dark:group-hover:text-white/60 group-hover:translate-x-1 transition-all" />
+          </Link>
+
+          <Link
+            to="/admin/operators"
+            className="group bg-white dark:bg-[#1a1f2e]/80 rounded-2xl p-6 border border-neutral-200/80 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/20 shadow-xs hover:shadow-md transition-all flex items-center justify-between"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <Headset className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
+                  Operator Management
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-white/40 mt-0.5">
+                  Hub dispatchers & branch staff
                 </p>
               </div>
             </div>
