@@ -11,7 +11,7 @@ import {
   Menu,
   X,
   ArrowLeft,
-  Headset,
+  // Headset,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
 import Cookies from "js-cookie"
@@ -24,12 +24,12 @@ const sidebarLinks = [
     icon: LayoutDashboard,
     label: "Overview",
   },
-  {
-    to: "/admin/operators",
-    end: false,
-    icon: Headset,
-    label: "Operators",
-  },
+  // {
+  //   to: "/admin/operators",
+  //   end: false,
+  //   icon: Headset,
+  //   label: "Operators",
+  // },
   {
     to: "/admin/users",
     end: false,

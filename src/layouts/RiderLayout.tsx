@@ -12,7 +12,6 @@ import {
   X,
   ArrowLeft,
   Shield,
-  CircleDot,
   Truck,
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store/authStore"
@@ -39,14 +38,12 @@ const riderSidebarLinks: SidebarItem[] = [
     end: false,
     icon: Package,
     label: "Assigned Deliveries",
-    badge: "Queue",
   },
   {
     to: "/rider/deliveries",
     end: false,
     icon: Truck,
     label: "Deliveries",
-    badge: "Active",
   },
   {
     to: "/rider/earnings",
@@ -62,7 +59,6 @@ const RiderLayout = () => {
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isOnDuty, setIsOnDuty] = useState(true)
 
   const handleLogout = () => {
     Cookies.remove("accessToken", { path: "/" })
@@ -135,45 +131,6 @@ const RiderLayout = () => {
             <X className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Duty Status Card */}
-        {!collapsed && (
-          <div className="mx-3 mt-3 p-3 rounded-2xl bg-neutral-100/80 dark:bg-white/5 border border-neutral-200/80 dark:border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span
-                className={`relative flex h-2.5 w-2.5`}
-              >
-                {isOnDuty && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CAEA3C] opacity-75"></span>
-                )}
-                <span
-                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                    isOnDuty ? "bg-[#CAEA3C]" : "bg-neutral-400"
-                  }`}
-                ></span>
-              </span>
-              <div className="flex flex-col">
-                <span className="text-xs font-semibold text-neutral-900 dark:text-white">
-                  {isOnDuty ? "On Duty (Online)" : "Off Duty (Offline)"}
-                </span>
-                <span className="text-[10px] text-neutral-500 dark:text-white/40">
-                  {isOnDuty ? "Ready for orders" : "Not accepting tasks"}
-                </span>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsOnDuty(!isOnDuty)}
-              className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-colors cursor-pointer ${
-                isOnDuty
-                  ? "bg-lime-100 dark:bg-[#CAEA3C]/20 text-lime-800 dark:text-[#CAEA3C] hover:bg-lime-200 dark:hover:bg-[#CAEA3C]/30"
-                  : "bg-neutral-200 dark:bg-white/10 text-neutral-700 dark:text-white/70 hover:bg-neutral-300 dark:hover:bg-white/20"
-              }`}
-            >
-              {isOnDuty ? "Go Offline" : "Go Online"}
-            </button>
-          </div>
-        )}
 
         {/* Sidebar Nav Links */}
         <nav className="flex-1 py-4 px-3 space-y-1.5 overflow-y-auto">
@@ -327,14 +284,6 @@ const RiderLayout = () => {
               <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-lime-100 text-lime-800 border border-lime-300/80 dark:bg-[#CAEA3C]/15 dark:text-[#CAEA3C] dark:border-[#CAEA3C]/20 flex items-center gap-1.5">
                 <Bike className="w-3.5 h-3.5 text-lime-700 dark:text-[#CAEA3C]" />
                 Rider Portal
-              </span>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium text-neutral-600 dark:text-white/50 bg-neutral-100 dark:bg-white/5 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-white/5">
-                <CircleDot
-                  className={`w-2.5 h-2.5 ${
-                    isOnDuty ? "text-emerald-500 dark:text-emerald-400" : "text-neutral-400 dark:text-white/30"
-                  }`}
-                />
-                {isOnDuty ? "Active Shift" : "Offline"}
               </span>
             </div>
           </div>

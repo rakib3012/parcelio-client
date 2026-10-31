@@ -233,7 +233,7 @@ const AdminOverviewPage = () => {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <OverviewStatsCard
           label="Total Users"
           value={stats?.users.total ?? 0}
@@ -242,14 +242,7 @@ const AdminOverviewPage = () => {
           sparkColor="#3b82f6"
           sparkVariant="wave"
         />
-        <OverviewStatsCard
-          label="Operators"
-          value={stats?.users.operators ?? 0}
-          icon={Headset}
-          iconColor="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/30 dark:text-emerald-300"
-          sparkColor="#10b981"
-          sparkVariant="up"
-        />
+       
         <OverviewStatsCard
           label="Pending"
           value={stats?.bookings.pending ?? 0}

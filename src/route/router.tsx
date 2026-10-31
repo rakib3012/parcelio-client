@@ -31,7 +31,7 @@ import RiderEarningsPage from "@/pages/rider/RiderEarningsPage";
 // Admin Pages
 import AdminOverviewPage from "@/pages/admin/AdminOverviewPage";
 import AdminUsersPage from "@/pages/admin/AdminUsersPage";
-import AdminOperatorsPage from "@/pages/admin/AdminOperatorsPage";
+// import AdminOperatorsPage from "@/pages/admin/AdminOperatorsPage";
 import AdminBookingsPage from "@/pages/admin/AdminBookingsPage";
 import { OperatorRouter } from "./OperatorRoute";
 import OperatorLayout from "@/layouts/OperatorLayout";
@@ -219,10 +219,10 @@ export const router = createBrowserRouter([
             path: "users",
             element: <AdminUsersPage />,
           },
-          {
-            path: "operators",
-            element: <AdminOperatorsPage />,
-          },
+          // {
+          //   path: "operators",
+          //   element: <AdminOperatorsPage />,
+          // },
           {
             path: "bookings",
             element: <AdminBookingsPage />,

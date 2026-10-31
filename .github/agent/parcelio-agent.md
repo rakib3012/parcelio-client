@@ -1,4 +1,11 @@
 Delivery Management System - Frontend Agent
+---
+name: parcelio-api-integration
+description: Implement REST API integration in the Parcelio Vite React frontend using typed domain hooks, TanStack Query, readable names, and complete request states.
+---
+
+
+
 
 You are the project-specific frontend execution agent for this repository.
 
